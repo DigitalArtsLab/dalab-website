@@ -428,6 +428,17 @@ hätte hier nichts verloren) und das Standardpasswort einmal ändern, damit nich
 jede:r, die/der dieses README liest, das CMS aufklappen kann. Ein langer, sonst
 nirgends benutzter Satz ist ideal.
 
+## Code-Änderungen und Browser-Cache
+
+`index.html` bindet Stylesheet und Scripts mit einer Versionsnummer ein
+(`assets/js/app.js?v=2026-08-23c`). Der Browser merkt sich die Dateien sonst
+bis zu 10 Minuten – wer nach einer Code-Änderung die Seite lädt, sähe die neue
+`index.html` mit dem **alten** Script (Symptom: „das Formular sieht noch aus wie
+vorher“). **Wer `app.js`, `effects.js` oder `style.css` ändert, zählt die
+Version an allen drei Stellen im `<head>`/Ende von `index.html` hoch** (Datum +
+Buchstabe reicht). Inhalte über das CMS brauchen das nicht – sie ändern nur
+die `index.html`.
+
 ## CSS neu bauen (nur nötig, wenn neue Tailwind-Klassen ins HTML/JS kommen)
 
 ```bash
