@@ -358,7 +358,7 @@
     function newsCard(n) {
         return `
             <div data-open="news" data-id="${esc(n.id)}" role="button" tabindex="0" aria-label="${esc(n.title)} - open news article" class="group border border-[#d1d1d1] bg-white overflow-hidden flex flex-col interactive cursor-pointer hover:shadow-lg transition-all duration-300">
-                <div class="h-40 bg-[#e5e5e5] flex items-center justify-center relative overflow-hidden">
+                <div class="h-48 bg-[#e5e5e5] flex items-center justify-center relative overflow-hidden">
                     ${cardImage(n, 'IMG_NEWS')}${cardOverlay}
                 </div>
                 <div class="p-6 flex-grow relative">
@@ -376,7 +376,7 @@
                     ${cardImage(p, 'IMG_' + (p.title || '').toUpperCase())}${cardOverlay}
                 </div>
                 <div class="p-8 flex-grow">
-                    <span class="text-[10px] font-din tracking-widest text-accent mb-3 block font-bold border-b border-accent/20 pb-2">${esc(p.status)}</span>
+                    <span class="text-[10px] font-din tracking-widest text-accent mb-3 block font-bold border-b border-accent/20 pb-2">${esc(p.status) || '&nbsp;'}</span>
                     <h4 class="font-din font-bold text-xl mb-3">${esc(p.title)}</h4>
                     <p class="text-sm opacity-80 leading-relaxed font-light">${esc(p.shortDesc)}</p>
                 </div>
@@ -441,7 +441,13 @@
     }
 
     function renderTeam() {
-        $('dynamic-team-grid').innerHTML = allData.team.map(t => `
+        // 4 columns by default. When that would leave a single person alone in
+        // the last row (5, 9, 13 ...), switch to 3 columns so the grid closes.
+        const n = allData.team.length;
+        const grid = $('dynamic-team-grid');
+        const threeCols = n > 4 && n % 4 === 1 && n % 3 !== 1;
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-8 ' + (threeCols ? 'lg:grid-cols-3' : 'md:grid-cols-4');
+        grid.innerHTML = allData.team.map(t => `
             <div data-open="team" data-id="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} - open profile" class="group border border-[#d1d1d1] bg-white overflow-hidden flex flex-col interactive cursor-pointer text-center hover:border-accent hover:shadow-lg transition-all duration-300">
                 <div class="w-1/2 mx-auto mt-8 aspect-square bg-[#e5e5e5] flex items-center justify-center relative overflow-hidden rounded-full border-2 border-transparent group-hover:border-accent transition-colors">
                     ${t.imageUrl
@@ -455,7 +461,7 @@
             </div>`).join('');
     }
 
-    function pubEntry(p, extraClass) {
+    function pubEntry(p, extraClass, showYear) {
         // Classic citation line: Authors - Venue, Volume/Issue/Pages details, DOI link.
         let meta = esc(p.authors) + ' &ndash; ' + esc(p.journal);
         if (p.details && p.details.trim()) meta += ', ' + esc(p.details.trim());
@@ -468,8 +474,8 @@
                 <div class="absolute left-0 top-0 h-full w-1 bg-accent scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300"></div>
                 <div class="pl-4">
                     <div class="flex flex-col md:flex-row md:items-baseline justify-between">
-                        <h4 class="font-bold text-xl mb-1 text-main group-hover:text-accent transition-colors">${esc(p.title)}</h4>
-                        <span class="text-sm font-din tracking-widest opacity-60">${esc(p.year)}</span>
+                        <h4 class="font-bold text-xl mb-1 text-main normal-case group-hover:text-accent transition-colors">${esc(p.title)}</h4>
+                        ${showYear ? '<span class="text-sm font-din tracking-widest opacity-60">' + esc(p.year) + '</span>' : ''}
                     </div>
                     <p class="text-base text-main/70 font-light">${meta}</p>
                     ${doiHtml ? '<p class="text-sm font-light mt-1">' + doiHtml + '</p>' : ''}
@@ -483,17 +489,26 @@
             (a, b) => (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0)
         );
         $('dynamic-recent-pubs').innerHTML =
-            pubs.slice(0, 3).map(p => pubEntry(p, 'hairline-b pb-6')).join('');
+            pubs.slice(0, 3).map(p => pubEntry(p, 'hairline-b pb-6', true)).join('');
 
         let currentYear = null;
+        const years = [];
         $('pubs-archive-list').innerHTML = pubs.map(p => {
             let heading = '';
             if (p.year !== currentYear) {
                 currentYear = p.year;
-                heading = '<h3 class="text-2xl font-din font-bold mt-12 mb-6 hairline-b pb-2 tracking-widest text-accent">' + esc(currentYear) + '</h3>';
+                years.push({ year: currentYear, count: pubs.filter(q => q.year === currentYear).length });
+                heading = '<h3 id="pub-year-' + esc(currentYear) + '" class="text-2xl font-din font-bold mt-12 mb-6 hairline-b pb-2 tracking-widest text-accent">' + esc(currentYear) + '</h3>';
             }
-            return heading + pubEntry(p, 'mb-6');
+            return heading + pubEntry(p, 'mb-6', false);
         }).join('');
+
+        // Year jump bar in the archive's sticky header - with many entries the
+        // list gets long, this keeps every year one click away.
+        $('pubs-year-nav').innerHTML = years.length > 1
+            ? years.map(y => '<button data-action="jump-year" data-year="' + esc(y.year) + '" class="font-din text-xs tracking-widest border border-main/10 px-4 py-2 hover:border-accent hover:text-accent transition-colors interactive" title="' + y.count + ' Einträge">' + esc(y.year) + '</button>').join('')
+            : '';
+        $('pubs-count').textContent = pubs.length ? pubs.length + (pubs.length === 1 ? ' ENTRY' : ' ENTRIES') : '';
     }
 
     function initApp() {
@@ -657,13 +672,37 @@
         }
     }
 
+    // The list order is the order on the page (news/projects: first entries
+    // on the front page, team: left to right). Arrows move an entry by one.
     function renderAdminList() {
         const { display } = SECTIONS[currentTab];
-        $('admin-list-view').innerHTML = (allData[currentTab] || []).map(item => `
-            <div class="flex justify-between items-center p-4 bg-white border border-gray-200">
-                <span class="font-bold">${esc(item[display])}</span>
+        const list = allData[currentTab] || [];
+        const hint = currentTab === 'publications'
+            ? 'Sortierung auf der Seite: neuestes Jahr zuerst. Die Pfeile ordnen Einträge innerhalb eines Jahres.'
+            : currentTab === 'team'
+                ? 'Reihenfolge wie auf der Seite (links oben zuerst). Neue Personen werden hinten angefügt – mit den Pfeilen verschieben.'
+                : 'Reihenfolge wie auf der Seite. Die Startseite zeigt die ersten ' + LIST_LIMITS[currentTab] + ' Einträge, der Rest steht im Archiv. Neue Einträge kommen automatisch nach oben.';
+        $('admin-list-view').innerHTML =
+            '<p class="text-xs text-gray-500 mb-4">' + hint + '</p>' +
+            list.map((item, i) => `
+            <div class="flex justify-between items-center p-4 bg-white border border-gray-200 gap-4">
+                <span class="font-din text-xs text-gray-400 tracking-widest">${i + 1}</span>
+                <span class="font-bold flex-grow">${esc(item[display])}${currentTab === 'publications' && item.year ? ' <span class="font-din text-xs text-gray-400 tracking-widest">' + esc(item.year) + '</span>' : ''}</span>
+                <button data-action="move-up" data-id="${esc(item.id)}" class="font-din text-xs text-gray-500 hover:text-accent px-4 py-2 interactive${i === 0 ? ' opacity-30 cursor-default' : ''}" aria-label="nach oben" title="nach oben"${i === 0 ? ' disabled' : ''}>&#9650;</button>
+                <button data-action="move-down" data-id="${esc(item.id)}" class="font-din text-xs text-gray-500 hover:text-accent px-4 py-2 interactive${i === list.length - 1 ? ' opacity-30 cursor-default' : ''}" aria-label="nach unten" title="nach unten"${i === list.length - 1 ? ' disabled' : ''}>&#9660;</button>
                 <button data-action="edit-item" data-id="${esc(item.id)}" class="text-sm font-din tracking-widest text-accent hover:underline">EDIT</button>
             </div>`).join('');
+    }
+
+    function moveItem(id, delta) {
+        const list = allData[currentTab] || [];
+        const i = list.findIndex(x => String(x.id) === String(id));
+        const j = i + delta;
+        if (i < 0 || j < 0 || j >= list.length) return;
+        [list[i], list[j]] = [list[j], list[i]];
+        persist();
+        initApp();
+        renderAdminList();
     }
 
     function setPreview(url) {
@@ -683,10 +722,97 @@
     function buildForm(data = {}) {
         const section = SECTIONS[currentTab];
         $('image-upload-section').classList.toggle('hidden', !section.hasImage);
-        $('form-fields-container').innerHTML = section.fields.map(([key, label, kind]) => kind === 'area'
+        // Publications: the DOI alone fetches title, authors, year, venue and
+        // details - typing them by hand is the slow part of 20 papers a year.
+        const doiBox = currentTab === 'publications'
+            ? `<div class="bg-white border border-gray-200 p-4 mb-6">
+                <label class="admin-label" for="doi-lookup-input">DOI eingeben und Felder automatisch füllen</label>
+                <div class="flex flex-wrap gap-4">
+                    <input type="text" id="doi-lookup-input" class="admin-input flex-grow" placeholder="10.1145/3816085 oder https://doi.org/…" value="${esc(data.doi)}">
+                    <button type="button" data-action="doi-lookup" id="btn-doi-lookup" class="border border-main px-4 py-2 font-din tracking-widest text-xs hover:bg-main hover:text-white transition-colors interactive">FELDER FÜLLEN</button>
+                </div>
+                <p class="text-xs text-gray-500">Holt die Angaben von Crossref bzw. DataCite. Danach bitte kurz prüfen – vor allem Autorennamen und Venue.</p>
+              </div>`
+            : '';
+        $('form-fields-container').innerHTML = doiBox + section.fields.map(([key, label, kind]) => kind === 'area'
             ? `<div><label class="admin-label" for="field-${key}">${esc(label)}</label><textarea id="field-${key}" class="admin-input" style="height: 120px">${esc(data[key])}</textarea></div>`
             : `<div><label class="admin-label" for="field-${key}">${esc(label)}</label><input type="text" id="field-${key}" class="admin-input" value="${esc(data[key])}"></div>`
         ).join('');
+    }
+
+    // ---------- DOI lookup (Crossref, fallback DataCite) ----------
+    const cleanDoi = s => String(s || '').trim()
+        .replace(/^https?:\/\/(dx\.)?doi\.org\//i, '')
+        .replace(/^doi:\s*/i, '')
+        .replace(/[.,;)\]]+$/, '');
+
+    // "Juergen Hagler and Celine Pham" - matches how the first entries were written.
+    function joinAuthors(names) {
+        const n = names.filter(Boolean);
+        if (n.length <= 1) return n.join('');
+        if (n.length === 2) return n[0] + ' and ' + n[1];
+        return n.slice(0, -1).join(', ') + ', and ' + n[n.length - 1];
+    }
+
+    async function lookupDoi(doi) {
+        // Crossref first (ACM, IEEE, Springer, Elsevier ...), then DataCite
+        // (Zenodo, OSF, institutional repositories).
+        let res = await fetch('https://api.crossref.org/works/' + encodeURIComponent(doi), { headers: { Accept: 'application/json' } });
+        if (res.ok) {
+            const w = (await res.json()).message || {};
+            const date = w['published-print'] || w['published-online'] || w.issued || w.created || {};
+            const year = date['date-parts'] && date['date-parts'][0] ? date['date-parts'][0][0] : '';
+            const venue = (w['container-title'] && w['container-title'][0]) || (w.event && w.event.name) || w.publisher || '';
+            // "9, 3, Article 40" for journals with article numbers, "9, 3, pp. 1-8" otherwise.
+            const pages = w['article-number'] ? 'Article ' + w['article-number']
+                : w.page ? (w.page.indexOf('-') > -1 ? 'pp. ' + w.page : 'Article ' + w.page) : '';
+            const details = [w.volume, w.issue, pages].filter(Boolean).join(', ');
+            return {
+                title: (w.title && w.title[0]) || '',
+                authors: joinAuthors((w.author || []).map(a => a.given ? a.given + ' ' + a.family : (a.family || a.name || ''))),
+                year: year ? String(year) : '',
+                journal: venue,
+                details
+            };
+        }
+        res = await fetch('https://api.datacite.org/dois/' + encodeURIComponent(doi), { headers: { Accept: 'application/vnd.api+json' } });
+        if (res.ok) {
+            const a = ((await res.json()).data || {}).attributes || {};
+            const t = (a.titles && a.titles[0] && a.titles[0].title) || '';
+            return {
+                title: t,
+                authors: joinAuthors((a.creators || []).map(c => c.givenName ? c.givenName + ' ' + c.familyName : (c.name || ''))),
+                year: a.publicationYear ? String(a.publicationYear) : '',
+                journal: (a.container && a.container.title) || a.publisher || '',
+                details: [a.container && a.container.volume, a.container && a.container.issue,
+                    a.container && a.container.firstPage ? 'pp. ' + a.container.firstPage + (a.container.lastPage ? '-' + a.container.lastPage : '') : ''].filter(Boolean).join(', ')
+            };
+        }
+        throw new Error(res.status === 404 ? 'DOI nicht gefunden.' : 'Abfrage fehlgeschlagen (' + res.status + ').');
+    }
+
+    async function doiLookupAction() {
+        const input = $('doi-lookup-input');
+        const btn = $('btn-doi-lookup');
+        const doi = cleanDoi(input.value);
+        if (!doi) { input.focus(); return; }
+        btn.disabled = true;
+        const label = btn.textContent;
+        btn.textContent = '⏳ …';
+        try {
+            const r = await lookupDoi(doi);
+            const filled = [];
+            [['title', r.title], ['authors', r.authors], ['year', r.year], ['journal', r.journal], ['details', r.details], ['doi', doi]].forEach(([k, v]) => {
+                const f = $('field-' + k);
+                if (f && v) { f.value = v; filled.push(k); }
+            });
+            toast('&#9989; FELDER GEF&Uuml;LLT', 'Aus dem DOI &uuml;bernommen: ' + esc(filled.join(', ')) + '. Bitte pr&uuml;fen und dann SAVE klicken.');
+        } catch (err) {
+            toast('&#9888;&#65039; DOI-ABFRAGE', esc(err.message || String(err)) + ' Felder bitte von Hand ausf&uuml;llen.', 'bg-red-800');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = label;
+        }
     }
 
     function openEditor({ item = null } = {}) {
@@ -727,8 +853,10 @@
             if (index > -1) list[index] = { ...list[index], ...payload };
         } else {
             payload.id = 'id_' + Date.now();
-            // News: newest entries go to the top of the page.
-            if (currentTab === 'news') list.unshift(payload);
+            // News and projects: newest entries go to the top of the page -
+            // the front page only shows the first few. Team members are
+            // appended; their order is arranged with the arrows in the list.
+            if (currentTab === 'news' || currentTab === 'projects') list.unshift(payload);
             else list.push(payload);
         }
         persist();
@@ -776,8 +904,8 @@
         // Strip rendered content - rebuilt from data on load; uploaded base64
         // images inside cards would otherwise bloat the file.
         ['dynamic-news-grid', 'dynamic-projects-grid', 'dynamic-team-grid',
-         'dynamic-recent-pubs', 'pubs-archive-list', 'admin-list-view',
-         'form-fields-container'].forEach(id => {
+         'dynamic-recent-pubs', 'pubs-archive-list', 'pubs-year-nav', 'pubs-count',
+         'admin-list-view', 'form-fields-container'].forEach(id => {
             const el = clone.querySelector('#' + id);
             if (el) el.innerHTML = '';
         });
@@ -799,6 +927,9 @@
         });
         const heroImg = clone.querySelector('#main-hero-img');
         if (heroImg) heroImg.setAttribute('src', HERO_DEFAULT_SRC); // re-set from data on load
+        // renderTeam picks the column count per team size - keep the file stable.
+        const teamGrid = clone.querySelector('#dynamic-team-grid');
+        if (teamGrid) teamGrid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8';
         const heroPrev = clone.querySelector('#admin-hero-preview');
         if (heroPrev) heroPrev.setAttribute('src', HERO_DEFAULT_SRC);
         // Admin panel always reopens on the news tab - don't bake a tab state in.
@@ -907,8 +1038,8 @@
             const b = B.get(id), t = T.get(id);
             if (!b) {
                 if (!t) {
-                    // News: newest on top - same rule as the editor uses.
-                    if (listName === 'news') result.unshift(m); else result.push(m);
+                    // News/projects: newest on top - same rule as the editor uses.
+                    if (listName === 'news' || listName === 'projects') result.unshift(m); else result.push(m);
                     stats.added++;
                 } else if (!same(m, t)) {
                     conflicts.push(label(m) + ' wurde hier und von jemand anderem gleichzeitig neu angelegt');
@@ -926,13 +1057,38 @@
             }
         });
 
-        return { result, conflicts, stats };
+        // Order. The result so far follows the repo's order; a re-sort done
+        // here (arrows in the admin list) would be lost. Compare the order of
+        // the entries both sides know: if only this side moved things, apply
+        // this side's order; if the other side also re-sorted, theirs stays
+        // and the caller reports it.
+        const seq = (arr, other) => (arr || []).map(keyOf).filter(k => other.has(k)).join('|');
+        const iReordered = seq(mine, B) !== seq(base, M);
+        const theyReordered = seq(theirs, B) !== seq(base, T);
+        let orderNote = '';
+        if (iReordered && !theyReordered) {
+            const pos = new Map((mine || []).map((item, i) => [keyOf(item), i]));
+            // Entries this side knows follow this side's order; entries only
+            // the repo knows (their additions) stay at the index they had -
+            // appended stays appended, newest-on-top stays on top.
+            const known = result.filter(i => pos.has(keyOf(i))).sort((a, b) => pos.get(keyOf(a)) - pos.get(keyOf(b)));
+            const foreign = result.map((item, i) => ({ item, i })).filter(x => !pos.has(keyOf(x.item)));
+            const ordered = [...known];
+            foreign.forEach(f => ordered.splice(Math.min(f.i, ordered.length), 0, f.item));
+            result.splice(0, result.length, ...ordered);
+            stats.reordered = true;
+        } else if (iReordered && theyReordered) {
+            orderNote = listName + ': Reihenfolge wurde hier und im Repo geändert – die Reihenfolge aus dem Repo wurde beibehalten.';
+        }
+
+        return { result, conflicts, stats, orderNote };
     }
 
     function mergeData(base, mine, theirs) {
         const merged = JSON.parse(JSON.stringify(theirs));
         const conflicts = [];
         const summary = [];
+        const notes = [];
         const keys = new Set([...Object.keys(base), ...Object.keys(mine), ...Object.keys(theirs)]);
         keys.forEach(key => {
             const b = base[key], m = mine[key], t = theirs[key];
@@ -944,7 +1100,9 @@
                 if (r.stats.added) parts.push('+' + r.stats.added);
                 if (r.stats.changed) parts.push('~' + r.stats.changed);
                 if (r.stats.removed) parts.push('-' + r.stats.removed);
+                if (r.stats.reordered) parts.push('sortiert');
                 if (parts.length) summary.push(key + ' ' + parts.join(' '));
+                if (r.orderNote) notes.push(r.orderNote);
                 return;
             }
             // Scalars (heroImage): mine wins if untouched on their side.
@@ -956,7 +1114,7 @@
                 conflicts.push(key + ' wurde hier und von jemand anderem geändert');
             }
         });
-        return { merged, conflicts, summary };
+        return { merged, conflicts, summary, notes };
     }
 
     async function fetchRemote(token) {
@@ -989,7 +1147,7 @@
         try {
             const remote = await fetchRemote(token);
             const baseJson = localStorage.getItem(BASE_KEY) || fileJson;
-            const { merged, conflicts, summary } = mergeData(JSON.parse(baseJson), allData, remote.data);
+            const { merged, conflicts, summary, notes } = mergeData(JSON.parse(baseJson), allData, remote.data);
 
             if (conflicts.length) {
                 toast('&#9888;&#65039; KONFLIKT &ndash; NICHTS VER&Ouml;FFENTLICHT',
@@ -1050,6 +1208,7 @@
             toast('&#9989; VER&Ouml;FFENTLICHT!',
                 'Die &Auml;nderungen sind im Repo. Die Live-Seite zeigt sie nach etwa einer Minute' +
                 ' (GitHub kann die alte Fassung bis zu 10 Minuten zwischenspeichern &ndash; einfach sp&auml;ter neu laden).' +
+                (notes.length ? '<br><br>' + notes.map(esc).join('<br>') : '') +
                 (commitUrl ? '<br><br><a href="' + esc(commitUrl) + '" target="_blank" rel="noopener" class="hover:underline font-bold">Commit auf GitHub ansehen &#8599;</a>' : ''),
                 'bg-green-800');
         } catch (err) {
@@ -1078,6 +1237,16 @@
         'toggle-nav': toggleNav,
         'admin-tab': el => switchTab(el.dataset.tab),
         'add-new': () => openEditor(),
+        'jump-year': el => {
+            const h = document.getElementById('pub-year-' + el.dataset.year);
+            if (!h) return;
+            // The modal is its own scroll container; leave room for the sticky bar.
+            const m = $('pubs-modal');
+            m.scrollTo({ top: h.offsetTop - 110, behavior: 'smooth' });
+        },
+        'doi-lookup': doiLookupAction,
+        'move-up': el => moveItem(el.dataset.id, -1),
+        'move-down': el => moveItem(el.dataset.id, 1),
         'edit-item': el => openEditor({ item: (allData[currentTab] || []).find(i => i.id === el.dataset.id) }),
         'clear-image': () => {
             currentUploadedImage = null;
@@ -1154,6 +1323,7 @@
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') { closeModals(); closeNav(); return; }
         const t = e.target;
+        if (e.key === 'Enter' && t && t.id === 'doi-lookup-input') { e.preventDefault(); doiLookupAction(); return; }
         if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
         // Keyboard equivalent of clicking a card (Space would scroll otherwise).
         if (e.key === 'Enter' || e.key === ' ') {

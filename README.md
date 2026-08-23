@@ -40,6 +40,34 @@ dalab-website/
    siehe [Veröffentlichen direkt aus dem CMS](#veröffentlichen-direkt-aus-dem-cms).
    Alternativ **EXPORTIEREN** und die Datei von Hand ins Repo laden.
 
+### Reihenfolge, Startseite und Archiv
+
+Die Reihenfolge in der CMS-Liste ist die Reihenfolge auf der Seite. Jeder
+Eintrag hat **▲ ▼**-Pfeile, um ihn zu verschieben. Wer im Team zuerst steht,
+welches Projekt vorne liegt – alles damit steuerbar.
+
+- **News und Projekte:** Neue Einträge landen automatisch **oben**. Die
+  Startseite zeigt die ersten 6 News bzw. 8 Projekte; alles Weitere steht im
+  Archiv, das über den automatisch erscheinenden Knopf „VIEW ALL … (Anzahl)“
+  erreichbar ist.
+- **Team:** Neue Personen werden hinten angefügt – mit den Pfeilen an die
+  richtige Stelle schieben.
+- **Publikationen:** Auf der Seite immer neuestes Jahr zuerst, egal in welcher
+  Reihenfolge sie eingetragen wurden. Die Pfeile ordnen nur innerhalb eines
+  Jahres. Die Startseite zeigt die drei neuesten, das Archiv alle, nach Jahr
+  gruppiert und mit Jahres-Sprungleiste oben – auch 100 Einträge bleiben so
+  navigierbar.
+
+### Publikationen per DOI eintragen
+
+Im Bearbeiten-Formular einer Publikation gibt es oben das Feld **„DOI eingeben
+und Felder automatisch füllen“**. DOI (oder die komplette doi.org-Adresse)
+einfügen → **FELDER FÜLLEN** → Titel, Autor:innen, Jahr, Venue und
+Band/Heft/Seiten werden aus Crossref (bzw. DataCite) geholt. Danach kurz
+prüfen – vor allem Autorennamen und ob die Venue abgekürzt werden soll – und
+SAVE. Die Abfrage passiert nur beim Klick und nur im Browser der bearbeitenden
+Person; Besucher:innen der Seite sind davon nicht betroffen.
+
 ### Wenn hochgeladene Änderungen nicht erscheinen
 
 Punkt 3 hat einen Haken, den man kennen muss: Der Browser merkt sich die
@@ -285,7 +313,9 @@ können eingeladene Kolleg:innen es dort nicht auswählen. Zwei Auswege:
    und *was im Repo liegt*. Nur **deine** Änderungen werden auf den Repo-Stand
    übertragen – Einträge, die jemand anderes inzwischen geändert oder ergänzt
    hat, bleiben erhalten. Zwei Leute können also gleichzeitig an
-   verschiedenen Dingen arbeiten.
+   verschiedenen Dingen arbeiten. Eine geänderte **Reihenfolge** wird ebenfalls
+   übertragen; haben beide Seiten umsortiert, bleibt die Reihenfolge aus dem
+   Repo und das CMS weist darauf hin.
 3. Hat jemand anderes **denselben Eintrag** geändert wie du, wird **nichts**
    veröffentlicht und das CMS sagt dir, welcher Eintrag betroffen ist. Dann:
    EXPORTIEREN (Sicherung), *Lokale Änderungen verwerfen*, den Eintrag noch
