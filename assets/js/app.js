@@ -636,11 +636,25 @@
     let currentTab = 'news';
     let currentUploadedImage = null;
 
+    function refreshHeroPreview() {
+        $('admin-hero-preview').src = allData.heroImage || HERO_DEFAULT_SRC;
+    }
+
     function switchTab(tab) {
         currentTab = tab;
-        $('admin-section-title').textContent = tab.toUpperCase();
+        const isHero = tab === 'hero';
+        $('admin-section-title').textContent = isHero ? 'HERO LOGO' : tab.toUpperCase();
+        document.querySelectorAll('[data-action="admin-tab"]').forEach(b =>
+            b.classList.toggle('text-accent', b.dataset.tab === tab));
+        $('btn-add-new').classList.toggle('hidden', isHero);
+        $('admin-hero-view').classList.toggle('hidden', !isHero);
         cancelEdit();
-        renderAdminList();
+        if (isHero) {
+            $('admin-list-view').classList.add('hidden');
+            refreshHeroPreview();
+        } else {
+            renderAdminList();
+        }
     }
 
     function renderAdminList() {
@@ -691,7 +705,7 @@
     }
 
     function cancelEdit() {
-        $('admin-list-view').classList.remove('hidden');
+        $('admin-list-view').classList.toggle('hidden', currentTab === 'hero');
         $('admin-editor-form').classList.add('hidden');
     }
 
@@ -785,6 +799,16 @@
         });
         const heroImg = clone.querySelector('#main-hero-img');
         if (heroImg) heroImg.setAttribute('src', HERO_DEFAULT_SRC); // re-set from data on load
+        const heroPrev = clone.querySelector('#admin-hero-preview');
+        if (heroPrev) heroPrev.setAttribute('src', HERO_DEFAULT_SRC);
+        // Admin panel always reopens on the news tab - don't bake a tab state in.
+        const heroView = clone.querySelector('#admin-hero-view');
+        if (heroView) heroView.classList.add('hidden');
+        const listView = clone.querySelector('#admin-list-view');
+        if (listView) listView.classList.remove('hidden');
+        const addNew = clone.querySelector('#btn-add-new');
+        if (addNew) addNew.classList.remove('hidden');
+        clone.querySelectorAll('[data-action="admin-tab"]').forEach(b => b.classList.remove('text-accent'));
         const preview = clone.querySelector('#admin-img-preview');
         if (preview) preview.innerHTML = '<span class="text-xs text-gray-400">No Image</span>';
         // A publish that is still running must not leave its button disabled.
@@ -1065,6 +1089,12 @@
         'cancel-edit': cancelEdit,
         'delete-item': deleteItem,
         'upload-hero': () => $('hero-logo-upload').click(),
+        'reset-hero': () => {
+            allData.heroImage = HERO_DEFAULT_SRC;
+            $('main-hero-img').src = HERO_DEFAULT_SRC;
+            refreshHeroPreview();
+            if (persist()) toast('&#9989; STANDARD-LOGO', 'Die Seite nutzt wieder images/hero/DAlabLogo.png. Mit VER&Ouml;FFENTLICHEN geht es online.');
+        },
         'export': exportHtml,
         'publish': publish,
         'edit-token': () => openTokenDialog(),
@@ -1170,9 +1200,10 @@
             const dataUrl = await compressImage(file, { type: 'image/png' });
             allData.heroImage = dataUrl;
             $('main-hero-img').src = dataUrl;
+            refreshHeroPreview();
             if (persist()) {
-                toast('&#9989; LOGO GESPEICHERT',
-                    "Bitte klicke jetzt noch auf 'EXPORTIEREN', um es dauerhaft in die Datei zu &uuml;bernehmen. Tipp: Alternativ die Datei images/hero/DAlabLogo.png im Website-Ordner direkt austauschen.");
+                toast('&#9989; LOGO &Uuml;BERNOMMEN',
+                    'Es ist jetzt lokal gespeichert &ndash; mit VER&Ouml;FFENTLICHEN geht es online. Tipp: Sauberer ist es, die Datei images/hero/DAlabLogo.png im Repo auszutauschen.');
             }
         } catch (err) {
             toast('&#9888;&#65039; UPLOAD FEHLGESCHLAGEN', 'Das Bild konnte nicht gelesen werden.', 'bg-red-800');

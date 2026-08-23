@@ -50,7 +50,7 @@ trotzdem korrekt, und alle anderen sehen die neue Fassung. (Beim Knopf
 VERÖFFENTLICHEN kümmert sich das CMS selbst darum.)
 
 Das CMS weist beim Öffnen darauf hin, sobald es eine Abweichung bemerkt. Der
-Knopf **LOKALE ÄNDERUNGEN VERWERFEN** oben im CMS räumt den Browserspeicher
+Eintrag **LOKALE ÄNDERUNGEN VERWERFEN** links unten im CMS (unter „Weitere“) räumt den Browserspeicher
 auf, danach zeigt die Seite wieder genau das, was in der `index.html` steht.
 Vorher exportieren, sonst sind ungesicherte Änderungen weg.
 
@@ -77,9 +77,11 @@ grep -c base64 index.html
 Ein gesetztes Bild wird über **✕ BILD ENTFERNEN** im Bearbeiten-Formular wieder
 losgeworden.
 
-Das Hero-Logo tauschst du am einfachsten, indem du `images/hero/DAlabLogo.png`
-direkt ersetzt. Danach `make-images.ps1` laufen lassen, damit Vorschaubild und
-Favicons zum neuen Logo passen.
+Das Hero-Logo hat im CMS einen eigenen Bereich (links: **HERO LOGO**) mit
+Vorschau, Upload und „Standard-Logo wiederherstellen“. Sauberer als der Upload
+ist es, `images/hero/DAlabLogo.png` im Repo direkt zu ersetzen und danach
+`make-images.ps1` laufen zu lassen, damit Vorschaubild und Favicons zum neuen
+Logo passen.
 
 ## Vor dem Live-Gang
 
@@ -231,7 +233,7 @@ geklickt hat, man sieht in der History also, wer was geändert hat.
 ### Einmalige Einrichtung pro Person (2 Minuten)
 
 Jede:r Redakteur:in braucht ein persönliches **GitHub-Token**. Es wird einmal
-im CMS eingetragen (🔑-Knopf oder beim ersten Klick auf VERÖFFENTLICHEN) und
+im CMS eingetragen (links unter „Weitere“ → GITHUB-TOKEN, oder automatisch beim ersten Klick auf VERÖFFENTLICHEN) und
 bleibt **nur im eigenen Browser** gespeichert – es landet nie im Repo oder
 auf der Website.
 

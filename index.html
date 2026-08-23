@@ -486,21 +486,8 @@
         <div class="sticky top-0 w-full flex flex-col md:flex-row justify-between items-center p-6 z-10 bg-white border-b border-gray-200 shadow-sm gap-4">
             <h2 class="font-din font-bold text-2xl text-accent">DA LAB <span class="font-light">CMS</span></h2>
             <div class="flex flex-wrap items-center gap-2 md:gap-4">
-                <input type="file" id="hero-logo-upload" accept="image/png, image/jpeg" class="hidden">
-                <button data-action="upload-hero" class="border border-main px-4 py-2 font-din tracking-widest text-xs hover:bg-main hover:text-white transition-colors interactive">
-                    🖼️ HERO LOGO HOCHLADEN
-                </button>
-                <button data-action="publish" id="btn-publish" class="bg-accent hover:bg-main text-white px-4 py-2 font-din tracking-widest text-xs interactive flex items-center gap-2" title="Schreibt die Änderungen direkt ins GitHub-Repo – ohne Export und Upload.">
+                <button data-action="publish" id="btn-publish" class="bg-accent hover:bg-main text-white px-6 py-2 font-din tracking-widest text-sm interactive flex items-center gap-2" title="Schreibt die Änderungen direkt ins GitHub-Repo. Nach etwa einer Minute online.">
                     🚀 VERÖFFENTLICHEN
-                </button>
-                <button data-action="export" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 font-din tracking-widest text-xs interactive flex items-center gap-2" title="Lädt die index.html herunter – für den manuellen Upload oder als Sicherung.">
-                    💾 EXPORTIEREN
-                </button>
-                <button data-action="edit-token" class="border border-gray-400 px-4 py-2 font-din tracking-widest text-xs hover:bg-gray-100 transition-colors interactive" title="GitHub-Token für das Veröffentlichen eintragen oder entfernen.">
-                    🔑
-                </button>
-                <button data-action="discard-local" class="border border-red-500 text-red-600 px-4 py-2 font-din tracking-widest text-xs hover:bg-red-50 transition-colors interactive" title="Verwirft alle lokal im Browser gespeicherten Änderungen und zeigt wieder den Stand aus der index.html.">
-                    ↺ LOKALE ÄNDERUNGEN VERWERFEN
                 </button>
                 <button data-action="close-modal" class="font-din text-sm tracking-widest border border-gray-400 px-6 py-2 hover:bg-gray-100 transition-colors interactive">
                     EXIT
@@ -509,20 +496,45 @@
         </div>
         <div class="flex flex-col md:flex-row min-h-screen">
             <div class="w-full md:w-64 bg-gray-50 border-r border-gray-200 p-6">
+                <p class="font-din tracking-widest text-xs opacity-50 mb-3">INHALTE</p>
                 <ul class="space-y-4 font-din tracking-widest text-sm">
-                    <li><button data-action="admin-tab" data-tab="news" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE NEWS</button></li>
-                    <li><button data-action="admin-tab" data-tab="projects" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE PROJECTS</button></li>
-                    <li><button data-action="admin-tab" data-tab="team" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE TEAM</button></li>
-                    <li><button data-action="admin-tab" data-tab="publications" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE PUBLICATIONS</button></li>
+                    <li><button data-action="admin-tab" data-tab="news" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">NEWS</button></li>
+                    <li><button data-action="admin-tab" data-tab="projects" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">PROJECTS</button></li>
+                    <li><button data-action="admin-tab" data-tab="team" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">TEAM</button></li>
+                    <li><button data-action="admin-tab" data-tab="publications" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">PUBLICATIONS</button></li>
+                    <li><button data-action="admin-tab" data-tab="hero" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">HERO LOGO</button></li>
+                </ul>
+                <p class="font-din tracking-widest text-xs opacity-50 mb-3 mt-12">WEITERE</p>
+                <ul class="space-y-2 font-din tracking-widest text-xs">
+                    <li><button data-action="edit-token" class="w-full text-left hover:text-accent py-2" title="GitHub-Token für das Veröffentlichen eintragen oder entfernen.">🔑 GITHUB-TOKEN</button></li>
+                    <li><button data-action="export" class="w-full text-left hover:text-accent py-2" title="Lädt die index.html herunter – als Sicherung oder für den manuellen Upload ins Repo.">💾 EXPORTIEREN (SICHERUNG)</button></li>
+                    <li><button data-action="discard-local" class="w-full text-left text-red-600 hover:underline py-2" title="Verwirft alle lokal im Browser gespeicherten Änderungen und zeigt wieder den Stand aus der index.html.">↺ LOKALE ÄNDERUNGEN VERWERFEN</button></li>
                 </ul>
             </div>
 
             <div class="flex-grow p-6 md:p-12">
                 <div class="flex justify-between items-center mb-8">
                     <h3 id="admin-section-title" class="text-3xl font-din font-bold">TEAM</h3>
-                    <button data-action="add-new" class="bg-accent text-white px-4 py-2 font-din tracking-widest text-sm interactive">
+                    <button data-action="add-new" id="btn-add-new" class="bg-accent text-white px-4 py-2 font-din tracking-widest text-sm interactive">
                         + ADD NEW
                     </button>
+                </div>
+
+                <div id="admin-hero-view" class="max-w-2xl hidden">
+                    <div class="bg-main p-10 flex items-center justify-center mb-6">
+                        <img id="admin-hero-preview" src="images/hero/DAlabLogo.png" alt="" class="max-w-[150px] w-full h-auto object-contain">
+                    </div>
+                    <input type="file" id="hero-logo-upload" accept="image/png, image/jpeg" class="hidden">
+                    <div class="flex flex-wrap gap-4 mb-6">
+                        <button data-action="upload-hero" class="bg-accent text-white px-6 py-2 font-din tracking-widest text-sm interactive">LOGO HOCHLADEN</button>
+                        <button data-action="reset-hero" class="border border-gray-400 px-6 py-2 font-din tracking-widest text-sm interactive hover:bg-gray-100">STANDARD-LOGO WIEDERHERSTELLEN</button>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed">
+                        Das Logo erscheint weiß auf dem farbigen Hintergrund der Startseite – am besten eine PNG-Datei mit
+                        transparentem Hintergrund. Hochgeladene Logos werden verkleinert und direkt in der Seite gespeichert.
+                        Sauberer ist es, die Datei <span class="font-bold">images/hero/DAlabLogo.png</span> im Repo zu ersetzen
+                        und danach mit <span class="font-bold">make-images.ps1</span> Favicon und Vorschaubild neu zu erzeugen.
+                    </p>
                 </div>
 
                 <div id="admin-list-view" class="space-y-2"></div>
