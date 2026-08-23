@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Self-hosted fonts (no Google request, GDPR-safe) ---------- */
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 300; font-display: swap; src: url('../fonts/barlow-latin-300-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 400; font-display: swap; src: url('../fonts/barlow-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 500; font-display: swap; src: url('../fonts/barlow-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 700; font-display: swap; src: url('../fonts/barlow-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('../fonts/inter-latin-300-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('../fonts/inter-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('../fonts/inter-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('../fonts/inter-latin-600-normal.woff2') format('woff2'); }
+
+/* ---------- Site styles ---------- */
+:root { --main: #094669; --accent: #00afb1; --bg: #f4f4f4; }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--main);
+    overflow-x: hidden;
+    font-size: 16px;
+}
+h1, h2, h3, h4, .font-din { text-transform: uppercase; }
+.hairline-b { border-bottom: 1px solid #d1d1d1; }
+.hairline-t { border-top: 1px solid #d1d1d1; }
+
+/* Custom cursor: only on devices with a real pointer (enabled via JS) */
+#cursor, #cursor-follower { display: none; }
+body.has-custom-cursor { cursor: none; }
+body.has-custom-cursor #cursor,
+body.has-custom-cursor #cursor-follower { display: block; }
+#cursor {
+    position: fixed; width: 8px; height: 8px; background-color: var(--main);
+    border-radius: 50%; pointer-events: none; z-index: 99999;
+    transform: translate(-50%, -50%); transition: background-color 0.2s, transform 0.2s;
+}
+#cursor-follower {
+    position: fixed; width: 36px; height: 36px; border: 1px solid var(--main);
+    border-radius: 50%; pointer-events: none; z-index: 99998;
+    transform: translate(-50%, -50%); transition: border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+#cursor.cursor-hover { background-color: var(--accent); transform: translate(-50%, -50%) scale(1.5); }
+#cursor-follower.cursor-hover { border-color: var(--accent); transform: translate(-50%, -50%) scale(1.2); }
+
+/* Modal transitions */
+.modal-open { overflow: hidden; }
+.modal { opacity: 0; pointer-events: none; transition: opacity 0.4s ease, transform 0.4s ease; transform: translateY(20px); visibility: hidden; }
+.modal.active { opacity: 1; pointer-events: auto; transform: translateY(0); visibility: visible; }
+
+/* Admin UI */
+.admin-input { width: 100%; border: 1px solid #d1d1d1; padding: 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.875rem; margin-bottom: 1rem; outline: none; }
+.admin-input:focus { border-color: var(--accent); }
+.admin-label { display: block; font-size: 0.75rem; font-family: 'Barlow', sans-serif; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 0.25rem; }
+
+/* Background canvas & animated gradient */
+#canvas { position: absolute; top: 0; left: 0; z-index: 0; width: 100vw; height: 100vh; display: block; }
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.hero-gradient {
+    background: linear-gradient(135deg, var(--accent), var(--main), var(--accent));
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+}
+
+/* ---------- Mobile navigation (shown below lg / 1024px) ---------- */
+.nav-toggle {
+    display: none;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    margin: -0.75rem -0.75rem -0.75rem 0; /* 44px touch target without growing the bar */
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+.nav-toggle-bar {
+    position: absolute;
+    left: 11px;
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background-color: var(--main);
+    transition: transform 0.3s ease, opacity 0.2s ease;
+}
+.nav-toggle-bar:nth-child(1) { top: 15px; }
+.nav-toggle-bar:nth-child(2) { top: 21px; }
+.nav-toggle-bar:nth-child(3) { top: 27px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* Panel is display:none from lg upwards, so a left-over .open state cannot
+   leak onto the desktop layout when the window is resized. */
+.mobile-nav { display: none; }
+.mobile-nav-link {
+    display: block;
+    padding: 1.1rem 1.5rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--main);
+    border-top: 1px solid #d1d1d1;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+.mobile-nav-link:hover,
+.mobile-nav-link:focus-visible { color: var(--accent); background-color: rgba(255, 255, 255, 0.6); }
+
+@media (max-width: 1023.98px) {
+    .nav-toggle { display: block; }
+    .mobile-nav {
+        display: block;
+        overflow: hidden;
+        max-height: 0;
+        /* visibility keeps the collapsed links out of the tab order */
+        visibility: hidden;
+        transition: max-height 0.35s ease, visibility 0s linear 0.35s;
+    }
+    .mobile-nav.open {
+        max-height: 24rem;
+        visibility: visible;
+        transition: max-height 0.35s ease, visibility 0s;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-toggle-bar,
+    .mobile-nav { transition: none; }
+}
+
+/* ---------- Visible keyboard focus ----------
+   Needed because the cards are role="button" divs, not native buttons. */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .modal { transition: none; }
+    .hero-gradient { animation: none; }
+}

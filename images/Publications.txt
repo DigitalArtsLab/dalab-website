@@ -1,0 +1,3 @@
+2026
+
+Juergen Hagler and Celine Pham. 2026. Unfinished Decay: Animating Historical Images from Gigapixel Digitizations via Fragment-Based AI Workflows. Proc. ACM Comput. Graph. Interact. Tech. 9, 3, Article 40 (July 2026), 8 pages. https://doi.org/10.1145/3816085

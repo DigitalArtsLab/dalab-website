@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DA Lab | Digital Arts Research Group</title>
+    <meta name="description" content="Research group at the University of Applied Sciences Upper Austria, Campus Hagenberg, exploring games &amp; interaction design and animation &amp; interactive art.">
+
+    <!-- Link previews (Slack, LinkedIn, Mastodon, WhatsApp ...).
+         SOBALD DIE DOMAIN FESTSTEHT: die beiden Zeilen darunter einkommentieren
+         und die Domain eintragen. Ohne sie funktioniert die Vorschau zwar,
+         relative Bildpfade werden aber nicht von jedem Dienst aufgelöst.
+    <link rel="canonical" href="https://DOMAIN/">
+    <meta property="og:url" content="https://DOMAIN/">
+    -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Digital Arts Lab">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="DA Lab | Digital Arts Research Group">
+    <meta property="og:description" content="Research group at the University of Applied Sciences Upper Austria, Campus Hagenberg, exploring games &amp; interaction design and animation &amp; interactive art.">
+    <meta property="og:image" content="images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Digital Arts Lab logo on the lab's teal and blue gradient.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="images/favicon-180.png">
+    <meta name="theme-color" content="#094669">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="selection:bg-accent selection:text-white relative">
+
+    
+    <div id="cursor" class=""></div>
+    <div id="cursor-follower" class=""></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 bg-[#f4f4f4]/90 backdrop-blur-md hairline-b">
+        <div class="px-6 py-5 flex justify-between items-center max-w-[1800px] mx-auto">
+            <a href="#" class="block interactive">
+                <div class="font-din text-xl md:text-2xl tracking-[0.15em] whitespace-nowrap">
+                    <span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span>
+                </div>
+            </a>
+            <div class="hidden lg:flex space-x-10 font-din text-xs tracking-[0.2em] font-medium text-main">
+                <a href="#news" class="hover:text-accent transition-colors interactive">NEWS</a>
+                <a href="#vision" class="hover:text-accent transition-colors interactive">LAB VISION</a>
+                <a href="#projects" class="hover:text-accent transition-colors interactive">PROJECTS</a>
+                <a href="#team" class="hover:text-accent transition-colors interactive">TEAM</a>
+                <a href="#publications" class="hover:text-accent transition-colors interactive">PUBLICATIONS</a>
+            </div>
+            <button type="button" id="nav-toggle" data-action="toggle-nav" class="nav-toggle interactive"
+                    aria-expanded="false" aria-controls="mobile-nav" aria-label="Menu">
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+            </button>
+        </div>
+        <div id="mobile-nav" class="mobile-nav">
+            <a href="#news" class="mobile-nav-link interactive">NEWS</a>
+            <a href="#vision" class="mobile-nav-link interactive">LAB VISION</a>
+            <a href="#projects" class="mobile-nav-link interactive">PROJECTS</a>
+            <a href="#team" class="mobile-nav-link interactive">TEAM</a>
+            <a href="#publications" class="mobile-nav-link interactive">PUBLICATIONS</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative h-screen flex flex-col justify-center items-center hairline-b overflow-hidden hero-gradient" id="hero-area">
+        <canvas id="canvas" class="interactive absolute inset-0 z-0" width="1920" height="998"></canvas>
+        <div class="px-6 relative z-10 max-w-[1800px] mx-auto w-full pointer-events-none flex justify-center">
+            <h1 class="sr-only">DIGITAL ARTS RESEARCH GROUP</h1>
+            <img id="main-hero-img" src="images/hero/DAlabLogo.png" alt="Digital Arts Research Group Logo" class="w-full max-w-[150px] md:max-w-[210px] lg:max-w-[260px] h-auto object-contain opacity-90 drop-shadow-2xl">
+        </div>
+    </header>
+
+    <!-- News -->
+    <section id="news" class="py-32 hairline-b relative z-10">
+        <div class="px-6 max-w-[1800px] mx-auto">
+            <h2 class="text-2xl font-din font-bold tracking-widest mb-16 text-main flex items-center gap-4">
+                <span class="w-3 h-3 bg-accent block"></span> NEWS
+            </h2>
+            <div id="dynamic-news-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Vision -->
+    <section id="vision" class="py-32 hairline-b bg-white relative z-10 overflow-hidden">
+        <div class="absolute top-0 right-0 w-[45vw] h-full bg-bglight/50 transform -skew-x-12 origin-top pointer-events-none border-l border-main/[0.03]"></div>
+
+        <div class="px-6 max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
+            <div class="lg:col-span-4">
+                <h2 class="text-2xl font-din tracking-widest font-bold text-main flex items-start gap-4 sticky top-32">
+                    <span class="w-3 h-3 bg-accent block mt-1.5"></span> LAB VISION
+                </h2>
+            </div>
+            <div class="lg:col-span-8">
+                <div class="mb-20 relative">
+                    <div class="w-12 h-1 bg-accent mb-8"></div>
+                    <p class="text-lg leading-[1.8] max-w-[70ch] text-main/80 font-light mb-8">
+                        The Digital Arts Lab explores the intersection of creative practice and digital technology. We investigate how emerging media shapes human experience, bridging the gap between artistic inquiry and technological innovation.
+                    </p>
+                    <p class="text-lg leading-[1.8] max-w-[70ch] text-main/80 font-light">
+                        Our work is driven by the belief that design and art are essential to understanding the digital future. This vision is built upon two core research areas. Both share a common foundation: a focus on design quality, artistic research, and the systematic examination of the aesthetic and experiential dimensions of digital media.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 lg:gap-12 relative items-stretch">
+
+                    <!-- Focus 01: Games -->
+                    <div class="group p-10 bg-[#f4f4f4] relative border border-transparent hover:border-[#d1d1d1] transition-all duration-500 interactive overflow-hidden shadow-sm hover:shadow-lg flex flex-col h-full">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-main scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left z-20"></div>
+
+                        <div class="absolute bottom-8 right-8 opacity-[0.08] group-hover:opacity-20 transition-all duration-500 pointer-events-none grid grid-cols-2 gap-2.5 z-0 transform group-hover:scale-110">
+                            <div class="w-5 h-5 rounded-full border-2 border-main transition-transform duration-300 group-hover:-translate-y-1 group-hover:-translate-x-1"></div>
+                            <div class="w-5 h-5 relative transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">
+                                <div class="absolute top-1/2 left-0 w-full h-0.5 bg-main -translate-y-1/2"></div>
+                                <div class="absolute top-0 left-1/2 w-0.5 h-full bg-main -translate-x-1/2"></div>
+                            </div>
+                            <div class="w-5 h-5 bg-main transition-transform duration-300 group-hover:translate-y-1 group-hover:-translate-x-1"></div>
+                            <div class="w-5 h-5 border-2 border-main transition-transform duration-300 group-hover:translate-y-1 group-hover:translate-x-1"></div>
+                        </div>
+
+                        <div class="relative z-10 flex-grow">
+                            <span class="text-xs font-din text-accent tracking-widest mb-6 block font-bold">RESEARCH FOCUS</span>
+                            <h3 class="text-2xl font-bold mb-4 font-din text-main leading-tight">GAMES &amp;<br>INTERACTION DESIGN</h3>
+                            <p class="leading-[1.7] text-main/70 text-sm mt-6 font-light">
+                                Investigating playful systems, meaningful interaction paradigms, and the psychological impact of game mechanics on user behavior. We design and analyze novel interfaces that challenge traditional modes of interaction.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Focus 02: Animation -->
+                    <div class="group p-10 bg-[#f4f4f4] relative border border-transparent hover:border-[#d1d1d1] transition-all duration-500 interactive overflow-hidden shadow-sm hover:shadow-lg flex flex-col h-full">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left delay-75 z-20"></div>
+
+                        <div class="absolute bottom-8 right-12 opacity-[0.08] group-hover:opacity-20 transition-all duration-700 pointer-events-none z-0">
+                            <div class="relative w-9 h-9">
+                                <div class="absolute inset-0 border-2 border-accent transition-all duration-500 -translate-x-4 -translate-y-4 opacity-30 group-hover:-translate-x-6 group-hover:-translate-y-6"></div>
+                                <div class="absolute inset-0 border-2 border-accent transition-all duration-500 -translate-x-2 -translate-y-2 opacity-60 group-hover:-translate-x-3 group-hover:-translate-y-3"></div>
+                                <div class="absolute inset-0 border-2 border-accent transition-all duration-500 bg-[#f4f4f4] z-10"></div>
+                            </div>
+                        </div>
+                        <div class="relative z-10 flex-grow">
+                            <span class="text-xs font-din text-accent tracking-widest mb-6 block font-bold">RESEARCH FOCUS</span>
+                            <h3 class="text-2xl font-bold mb-4 font-din text-main leading-tight">ANIMATION &amp;<br>INTERACTIVE ART</h3>
+                            <p class="leading-[1.7] text-main/70 text-sm mt-6 font-light">
+                                Exploring motion graphics, generative visuals, and artistic applications of real-time computer graphics in virtual spaces. Our focus lies on immersive storytelling and aesthetic experiences in XR environments.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="py-32 hairline-b relative z-10 overflow-hidden">
+        <div class="absolute top-1/2 left-0 w-full h-px bg-main/[0.03] -z-10 pointer-events-none"></div>
+        <div class="absolute top-0 left-1/3 w-px h-full bg-main/[0.03] -z-10 pointer-events-none"></div>
+        <div class="px-6 max-w-[1800px] mx-auto">
+            <h2 class="text-2xl font-din font-bold tracking-widest mb-16 text-main flex items-center gap-4">
+                <span class="w-3 h-3 bg-accent block"></span> PROJECTS
+            </h2>
+            <div id="dynamic-projects-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section id="team" class="py-32 hairline-b bg-white relative z-10">
+        <div class="px-6 max-w-[1800px] mx-auto">
+            <h2 class="text-2xl font-din font-bold tracking-widest mb-16 text-main flex items-center gap-4">
+                <span class="w-3 h-3 bg-accent block"></span> TEAM
+            </h2>
+            <div id="dynamic-team-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Publications -->
+    <section id="publications" class="py-32 hairline-b relative z-10">
+        <div class="px-6 max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div class="lg:col-span-4">
+                <h2 class="text-2xl font-din font-bold tracking-widest text-main flex items-start gap-4">
+                    <span class="w-3 h-3 bg-accent block mt-1.5"></span> PUBLICATIONS
+                </h2>
+            </div>
+            <div class="lg:col-span-8 relative">
+                <div class="absolute -left-6 top-2 w-1.5 h-1.5 bg-main/20 rounded-full hidden lg:block"></div>
+
+                <div id="dynamic-recent-pubs" class="space-y-6 border-l border-main/10 pl-6 lg:pl-0 lg:border-l-0"></div>
+                <button data-action="open-route" data-route="publications-archive" class="mt-12 border border-main px-8 py-4 font-din text-sm tracking-[0.2em] hover:bg-main hover:text-white transition-all interactive group relative overflow-hidden">
+                    <span class="relative z-10">VIEW ALL PUBLICATIONS</span>
+                    <div class="absolute inset-0 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 z-0"></div>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#e8e8e8] text-main py-24 hairline-t cursor-default relative z-10 border-t-4 border-accent">
+        <div class="px-6 max-w-[1800px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <a href="#" class="inline-block interactive mb-8">
+                    <div class="font-din text-2xl tracking-[0.15em] whitespace-nowrap">
+                        <span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span>
+                    </div>
+                </a>
+                <p class="text-base font-light opacity-70 max-w-sm leading-relaxed">
+                    Digital Arts Research Group<br>
+                    University of Applied Sciences Upper Austria<br>
+                    Campus Hagenberg
+                </p>
+            </div>
+            <div class="flex md:justify-end items-end space-x-10 font-din text-sm tracking-widest opacity-70">
+                <button type="button" data-action="open-route" data-route="imprint" class="hover:opacity-100 hover:text-accent transition-colors interactive relative group">IMPRINT
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                </button>
+                <button type="button" data-action="open-route" data-route="privacy" class="hover:opacity-100 hover:text-accent transition-colors interactive relative group">PRIVACY
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                </button>
+                <button type="button" data-action="open-route" data-route="contact" class="hover:opacity-100 hover:text-accent transition-colors interactive relative group">CONTACT
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Detail modals -->
+    <div id="news-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="nm-title">
+        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+                CLOSE ARTICLE <span aria-hidden="true">✕</span>
+            </button>
+        </div>
+        <div class="max-w-[1000px] mx-auto px-6 pb-32 pt-12">
+            <div id="nm-img-container" class="w-full h-[40vh] bg-[#e5e5e5] mb-12 flex items-center justify-center overflow-hidden">
+                <span class="text-main/40 font-din tracking-widest">NEWS_IMAGE</span>
+            </div>
+            <span id="nm-date" class="text-sm font-din tracking-widest text-accent mb-4 block border-l-2 border-accent pl-3">DATE</span>
+            <h2 id="nm-title" class="text-4xl md:text-6xl font-din font-bold mb-8 text-main">Title</h2>
+            <div id="nm-content" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[75ch] whitespace-pre-line font-light">Content</div>
+        </div>
+    </div>
+
+    <div id="project-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+                CLOSE <span aria-hidden="true">✕</span>
+            </button>
+        </div>
+        <div class="max-w-[1200px] mx-auto px-6 pb-32">
+            <div id="pm-img-container" class="w-full h-[40vh] md:h-[60vh] bg-[#e5e5e5] mb-12 flex items-center justify-center overflow-hidden">
+                <span class="text-main/40 font-din tracking-widest">PROJECT_IMAGE</span>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-8">
+                    <span id="pm-status" class="text-sm font-din tracking-widest text-accent mb-4 block border-l-2 border-accent pl-3">STATUS</span>
+                    <h2 id="pm-title" class="text-4xl md:text-6xl font-din font-bold mb-8 text-main">Title</h2>
+                    <div id="pm-content" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[75ch] whitespace-pre-line font-light">Content</div>
+                </div>
+                <div class="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-[#d1d1d1] pt-8 lg:pt-0 lg:pl-12">
+                    <h4 class="font-din tracking-widest text-sm mb-4 text-main font-bold">RESEARCHERS</h4>
+                    <p id="pm-team" class="font-light mb-8 text-main/80">Names</p>
+
+                    <h4 class="font-din tracking-widest text-sm mb-4 text-main font-bold">FUNDING / PARTNERS</h4>
+                    <p id="pm-partners" class="font-light text-main/80">Partners</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="team-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="tm-name">
+        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+                CLOSE PROFILE <span aria-hidden="true">✕</span>
+            </button>
+        </div>
+        <div class="max-w-[1200px] mx-auto px-6 py-20">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-4">
+                    <div id="tm-img-container" class="w-2/3 aspect-square rounded-full mx-auto bg-[#e5e5e5] mb-8 flex items-center justify-center overflow-hidden border-4 border-accent"><span class="text-main/20 font-din font-bold text-6xl">XY</span></div>
+                    <div class="space-y-6">
+                        <div class="border-l-2 border-main/10 pl-4">
+                            <h4 class="font-din tracking-widest text-xs opacity-50 mb-1">ROLE</h4>
+                            <p id="tm-role" class="font-medium text-lg text-main">Jürgen Hagler: Co-Head · Animation &amp; Interactive Art</p>
+                        </div>
+                        <div class="border-l-2 border-main/10 pl-4">
+                            <h4 class="font-din tracking-widest text-xs opacity-50 mb-1">CONTACT</h4>
+                            <a href="mailto:tm1@fh-ooe.at" id="tm-email" class="font-medium text-lg text-accent hover:text-main transition-colors interactive">tm1@fh-ooe.at</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-8 md:pl-8">
+                    <h2 id="tm-name" class="text-4xl md:text-6xl font-din font-bold mb-8 text-main">Juergen</h2>
+                    <div id="tm-bio" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[65ch] mb-16 whitespace-pre-line font-light">Bio</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pubs-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+                CLOSE ARCHIVE <span aria-hidden="true">✕</span>
+            </button>
+        </div>
+        <div class="max-w-[1200px] mx-auto px-6 py-20">
+            <h2 class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
+                <span class="w-4 h-4 bg-accent block"></span> PUBLICATION ARCHIVE
+            </h2>
+            <div id="pubs-archive-list"></div>
+        </div>
+    </div>
+
+    <!-- Legal pages.
+         ACHTUNG: Entwurf. Alle mit [ZU ERGÄNZEN] markierten Felder ausfüllen und
+         den Text vor dem Live-Gang von der FH-Rechtsabteilung prüfen lassen.
+         Die FH OÖ hat zentrale Impressums- und Datenschutztexte - im Zweifel
+         diese übernehmen bzw. darauf verlinken. -->
+    <div id="imprint-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="imprint-title">
+        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+                CLOSE <span aria-hidden="true">✕</span>
+            </button>
+        </div>
+        <div class="max-w-[1000px] mx-auto px-6 py-20" lang="de">
+            <h2 id="imprint-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
+                <span class="w-4 h-4 bg-accent block"></span> IMPRINT
+            </h2>
+            <p class="text-lg leading-[1.8] max-w-[70ch] text-main/80 font-light mb-12">
+                Offenlegung gemäß § 5 E-Commerce-Gesetz (ECG) und § 25 Mediengesetz.
+            </p>
+            <div class="space-y-6">
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">MEDIENINHABER UND DIENSTEANBIETER</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: vollständiger Name der Rechtsträgerin]<br>Fachhochschule Oberösterreich, Campus Hagenberg</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">ANSCHRIFT</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Straße und Hausnummer]<br>[ZU ERGÄNZEN: PLZ und Ort], Österreich</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">KONTAKT</h3>
+                    <p class="text-base font-light leading-relaxed">Telefon: [ZU ERGÄNZEN]<br>E-Mail: [ZU ERGÄNZEN]</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">RECHTSFORM, FIRMENBUCH, UID</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Rechtsform]<br>Firmenbuchnummer: [ZU ERGÄNZEN] &middot; Firmenbuchgericht: [ZU ERGÄNZEN]<br>UID-Nummer: [ZU ERGÄNZEN]</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">VERTRETUNGSBEFUGTE</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Geschäftsführung / vertretungsbefugte Organe]</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">AUFSICHTSBEHÖRDE</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: zuständige Aufsichtsbehörde]</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">INHALTLICH VERANTWORTLICH</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Name] &middot; Digital Arts Lab</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">BLATTLINIE</h3>
+                    <p class="text-base font-light leading-relaxed">Darstellung der Forschungstätigkeit, Projekte, Publikationen und Mitglieder des Digital Arts Lab.</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">BILDNACHWEIS</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Urheber der Team-, Projekt- und News-Bilder]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="privacy-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+                CLOSE <span aria-hidden="true">✕</span>
+            </button>
+        </div>
+        <div class="max-w-[1000px] mx-auto px-6 py-20" lang="de">
+            <h2 id="privacy-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
+                <span class="w-4 h-4 bg-accent block"></span> PRIVACY
+            </h2>
+            <p class="text-lg leading-[1.8] max-w-[70ch] text-main/80 font-light mb-12">
+                Informationen zur Verarbeitung personenbezogener Daten gemäß Art. 13 DSGVO.
+            </p>
+            <div class="space-y-6">
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">VERANTWORTLICHER</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Name und Anschrift der verantwortlichen Stelle - identisch mit dem Impressum]</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">DATENSCHUTZBEAUFTRAGTE:R</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Kontaktdaten]</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">KEINE COOKIES, KEIN TRACKING</h3>
+                    <p class="text-base font-light leading-relaxed">Diese Website setzt keine Cookies, verwendet keine Analyse- oder Trackingdienste und bindet keine Inhalte von Drittanbietern ein. Schriftarten werden lokal vom eigenen Server geladen, es findet insbesondere keine Verbindung zu Google Fonts statt. Beim Besuch der Seite werden dadurch keine Daten an Dritte übermittelt.</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">LOKALE SPEICHERUNG IM BROWSER</h3>
+                    <p class="text-base font-light leading-relaxed">Für die Redaktion der Inhalte nutzt diese Seite den lokalen Browserspeicher (localStorage). Dort abgelegte Daten verbleiben ausschließlich auf dem jeweiligen Gerät, werden nicht übertragen und lassen keine Rückschlüsse auf einzelne Personen zu. Für Besucherinnen und Besucher wird nichts gespeichert.</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">HOSTING UND SERVER-LOGFILES</h3>
+                    <p class="text-base font-light leading-relaxed">[ENTWURF - GILT NUR BEI HOSTING ÜBER GITHUB PAGES, VOR LIVE-GANG PRÜFEN:] Diese Website wird über GitHub Pages gehostet, einen Dienst der GitHub Inc. (USA). Beim Aufruf der Seite verarbeitet GitHub technisch bedingt Zugriffsdaten (insbesondere IP-Adresse, Zeitpunkt, abgerufene Datei, Browserkennung) zur Bereitstellung und Absicherung des Dienstes. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und effizienten Betrieb der Website). Details: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener" class="text-accent hover:text-main transition-colors interactive font-medium break-all">GitHub General Privacy Statement</a>.</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">KONTAKTAUFNAHME PER E-MAIL</h3>
+                    <p class="text-base font-light leading-relaxed">Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir Ihre Angaben ausschließlich zur Bearbeitung Ihrer Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">IHRE RECHTE</h3>
+                    <p class="text-base font-light leading-relaxed">Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung. Wenden Sie sich dazu an die oben genannte verantwortliche Stelle. Darüber hinaus steht Ihnen ein Beschwerderecht bei der Österreichischen Datenschutzbehörde zu.</p>
+                </div>
+                <div class="border-l-2 border-main/10 pl-4">
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">STAND</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Datum der letzten Aktualisierung]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+                CLOSE <span aria-hidden="true">✕</span>
+            </button>
+        </div>
+        <div class="max-w-[1000px] mx-auto px-6 py-20">
+            <h2 id="contact-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
+                <span class="w-4 h-4 bg-accent block"></span> CONTACT
+            </h2>
+            <p class="text-lg leading-[1.8] max-w-[70ch] text-main/80 font-light mb-12">
+                We welcome collaborations, student projects and press enquiries. Get in touch &ndash; we are happy to hear from you.
+            </p>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="space-y-6">
+                    <div class="border-l-2 border-main/10 pl-4">
+                        <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">EMAIL</h3>
+                        <p class="text-base font-light leading-relaxed">
+                            <a href="mailto:[ZU ERGÄNZEN]" class="text-accent hover:text-main transition-colors interactive font-medium break-all">[ZU ERGÄNZEN: allgemeine Kontaktadresse]</a>
+                        </p>
+                    </div>
+                    <div class="border-l-2 border-main/10 pl-4">
+                        <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">ADDRESS</h3>
+                        <p class="text-base font-light leading-relaxed">
+                            Digital Arts Lab<br>
+                            University of Applied Sciences Upper Austria<br>
+                            Campus Hagenberg<br>
+                            [ZU ERGÄNZEN: Straße, PLZ Ort], Austria
+                        </p>
+                    </div>
+                    <div class="border-l-2 border-main/10 pl-4">
+                        <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">PHONE</h3>
+                        <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN]</p>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="border-l-2 border-main/10 pl-4">
+                        <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">TEAM</h3>
+                        <p class="text-base font-light leading-relaxed">Individual contact details are listed with each team member in the <a href="#team" class="text-accent hover:text-main transition-colors interactive font-medium">team section</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin login -->
+    <div id="admin-login-modal" class="modal fixed inset-0 z-[150] bg-main/40 backdrop-blur-sm flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+        <div class="bg-white p-10 max-w-sm w-full mx-6 shadow-2xl border-t-4 border-accent">
+            <h2 id="admin-login-title" class="font-din font-bold text-2xl mb-2 text-main">ADMIN LOGIN</h2>
+            <p class="text-sm text-main/70 font-light mb-6">Bitte Passwort eingeben, um das CMS zu öffnen.</p>
+            <form id="admin-login-form">
+                <label class="admin-label" for="admin-password">Passwort</label>
+                <input type="password" id="admin-password" class="admin-input" autocomplete="current-password">
+                <p id="admin-login-error" class="text-red-600 text-xs mb-4 hidden">Falsches Passwort.</p>
+                <div class="flex gap-4">
+                    <button type="submit" class="bg-accent text-white px-6 py-2 font-din tracking-widest text-sm interactive">LOGIN</button>
+                    <button type="button" data-action="close-modal" class="border border-gray-400 px-6 py-2 font-din tracking-widest text-sm interactive hover:bg-gray-100">ABBRECHEN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin modal -->
+    <div id="admin-modal" class="modal fixed inset-0 z-[200] bg-white overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="sticky top-0 w-full flex flex-col md:flex-row justify-between items-center p-6 z-10 bg-white border-b border-gray-200 shadow-sm gap-4">
+            <h2 class="font-din font-bold text-2xl text-accent">DA LAB <span class="font-light">CMS</span></h2>
+            <div class="flex flex-wrap items-center gap-2 md:gap-4">
+                <input type="file" id="hero-logo-upload" accept="image/png, image/jpeg" class="hidden">
+                <button data-action="upload-hero" class="border border-main px-4 py-2 font-din tracking-widest text-xs hover:bg-main hover:text-white transition-colors interactive">
+                    🖼️ HERO LOGO HOCHLADEN
+                </button>
+                <button data-action="export" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 font-din tracking-widest text-xs interactive flex items-center gap-2">
+                    💾 EXPORTIEREN
+                </button>
+                <button data-action="discard-local" class="border border-red-500 text-red-600 px-4 py-2 font-din tracking-widest text-xs hover:bg-red-50 transition-colors interactive"
+                        title="Verwirft alle lokal im Browser gespeicherten Änderungen und zeigt wieder den Stand aus der index.html.">
+                    ↺ LOKALE ÄNDERUNGEN VERWERFEN
+                </button>
+                <button data-action="close-modal" class="font-din text-sm tracking-widest border border-gray-400 px-6 py-2 hover:bg-gray-100 transition-colors interactive">
+                    EXIT
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row min-h-screen">
+            <div class="w-full md:w-64 bg-gray-50 border-r border-gray-200 p-6">
+                <ul class="space-y-4 font-din tracking-widest text-sm">
+                    <li><button data-action="admin-tab" data-tab="news" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE NEWS</button></li>
+                    <li><button data-action="admin-tab" data-tab="projects" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE PROJECTS</button></li>
+                    <li><button data-action="admin-tab" data-tab="team" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE TEAM</button></li>
+                    <li><button data-action="admin-tab" data-tab="publications" class="w-full text-left font-bold hover:text-accent py-2 border-b border-gray-200">MANAGE PUBLICATIONS</button></li>
+                </ul>
+            </div>
+
+            <div class="flex-grow p-6 md:p-12">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 id="admin-section-title" class="text-3xl font-din font-bold">TEAM</h3>
+                    <button data-action="add-new" class="bg-accent text-white px-4 py-2 font-din tracking-widest text-sm interactive">
+                        + ADD NEW
+                    </button>
+                </div>
+
+                <div id="admin-list-view" class="space-y-2"></div>
+
+                <div id="admin-editor-form" class="max-w-2xl bg-gray-50 p-6 border border-gray-200 hidden">
+                    <h4 id="admin-form-title" class="font-din font-bold mb-6 text-xl">Add New team</h4>
+                    <input type="hidden" id="edit-id" value="">
+                    <div id="image-upload-section" class="mb-6">
+                        <label class="admin-label">Image</label>
+                        <div class="flex items-center gap-4 mb-3">
+                            <div id="admin-img-preview" class="w-24 h-24 bg-gray-200 border border-gray-300 flex items-center justify-center overflow-hidden"><span class="text-xs text-gray-400">No Image</span></div>
+                            <div>
+                                <input type="file" id="image-upload-input" accept="image/*" class="text-sm">
+                                <p class="text-xs text-gray-500 mt-2">Upload: wird automatisch verkleinert und in der Datei gespeichert.</p>
+                                <button type="button" data-action="clear-image" class="mt-2 text-xs font-din tracking-widest text-red-600 hover:underline interactive">✕ BILD ENTFERNEN</button>
+                            </div>
+                        </div>
+                        <label class="admin-label" for="image-path-input">Oder Bildpfad im Website-Ordner (empfohlen, z.B. images/team/maxi.jpg)</label>
+                        <input type="text" id="image-path-input" class="admin-input" placeholder="images/...">
+                    </div>
+                    <div id="form-fields-container" class="space-y-4"></div>
+                    <div class="flex space-x-4 mt-8 pt-6 border-t border-gray-200">
+                        <button data-action="save-item" class="bg-accent text-white px-6 py-2 font-din tracking-widest text-sm interactive">SAVE</button>
+                        <button data-action="cancel-edit" class="border border-gray-400 px-6 py-2 font-din tracking-widest text-sm interactive hover:bg-gray-100">CANCEL</button>
+                        <button data-action="delete-item" id="btn-delete" class="border border-red-500 text-red-500 px-6 py-2 font-din tracking-widest text-sm interactive hover:bg-red-50 ml-auto hidden">DELETE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Initial content data. The CMS export rewrites the body of this tag. -->
+    <script type="application/json" id="initial-data">
+{
+  "heroImage": "images/hero/DAlabLogo.png",
+  "projects": [
+    {
+      "id": "proj_0",
+      "title": "LudaViz",
+      "status": "ONGOING",
+      "team": "Prof. Dr. X. Y.",
+      "partners": "FWF",
+      "shortDesc": "Visualizing complex game data to understand player behavior.",
+      "content": "LudaViz addresses the challenge of understanding player behavior in highly complex multiplayer environments. By utilizing spatial data structures and real-time telemetry, we are developing novel visualization techniques that allow game designers to spot balancing issues organically.\n\nThe core innovation lies in mapping abstract data metrics into topological landscapes, turning statistical analysis into an intuitive, visual exploration process.",
+      "imageUrl": "images/projects/LudaViz.png"
+    },
+    {
+      "id": "proj_1",
+      "title": "Expanded",
+      "status": "COMPLETED",
+      "team": "Team Member 2",
+      "partners": "FFG",
+      "shortDesc": "XR research focusing on seamless transitions between spaces.",
+      "content": "This project investigated the threshold between physical environments and digital overlays in Augmented Reality. How much digital information can a physical space hold before cognitive overload occurs?",
+      "imageUrl": "images/projects/Expanded.webp"
+    },
+    {
+      "title": "Broach AI",
+      "status": "",
+      "team": "",
+      "partners": "",
+      "shortDesc": "",
+      "content": "",
+      "imageUrl": "images/projects/BroschAI.png",
+      "id": "id_1785397181376"
+    },
+    {
+      "title": "Theaterautomat",
+      "status": "",
+      "team": "",
+      "partners": "",
+      "shortDesc": "",
+      "content": "",
+      "imageUrl": "images/projects/Theaterautoemt.jpg",
+      "id": "id_1785397200877"
+    }
+  ],
+  "team": [
+    {
+      "id": "team_0",
+      "initials": "XY",
+      "name": "Michi",
+      "role": "Head of Lab \u00b7 Games & Interaction Design",
+      "email": "x.y@fh-ooe.at",
+      "bio": "Bio.",
+      "imageUrl": "images/team/Michi.jpg"
+    },
+    {
+      "id": "team_1",
+      "initials": "TM",
+      "name": "Juergen",
+      "role": "Co-Head \u00b7 Animation & Interactive Art",
+      "email": "tm1@fh-ooe.at",
+      "bio": "Bio",
+      "imageUrl": "images/team/juergen.webp"
+    },
+    {
+      "name": "Nils",
+      "initials": "",
+      "role": "Researcher",
+      "email": "",
+      "bio": "",
+      "imageUrl": "images/team/Nils.jpg",
+      "id": "id_1785397327368"
+    },
+    {
+      "name": "Luca",
+      "initials": "",
+      "role": "Researcher",
+      "email": "",
+      "bio": "",
+      "imageUrl": "images/team/Luca.jpg",
+      "id": "id_1785397396078"
+    },
+    {
+      "name": "Flo",
+      "initials": "",
+      "role": "Junior Researcher",
+      "email": "",
+      "bio": "",
+      "imageUrl": "images/team/Florian.jpg",
+      "id": "id_1785397421240"
+    },
+    {
+      "name": "Alina",
+      "initials": "",
+      "role": "Researcher",
+      "email": "",
+      "bio": "",
+      "imageUrl": "images/team/Alina.jpg",
+      "id": "id_1785397455324"
+    },
+    {
+      "name": "Lisa",
+      "initials": "",
+      "role": "Researcher",
+      "email": "",
+      "bio": "",
+      "imageUrl": "images/team/Lisa.jpg",
+      "id": "id_1785397482112"
+    },
+    {
+      "name": "Lukas",
+      "initials": "",
+      "role": "Researcher",
+      "email": "",
+      "bio": "",
+      "imageUrl": "images/team/Lukas.jpg",
+      "id": "id_1785397513424"
+    },
+    {
+      "name": "Vici",
+      "initials": "",
+      "role": "Researcher",
+      "email": "",
+      "bio": "",
+      "imageUrl": "images/team/Vici.jpg",
+      "id": "id_1785399953744"
+    }
+  ],
+  "publications": [
+    {
+      "id": "pub_0",
+      "title": "Unfinished Decay: Animating Historical Images from Gigapixel Digitizations via Fragment-Based AI Workflows",
+      "year": "2026",
+      "authors": "Juergen Hagler and Celine Pham",
+      "journal": "Proc. ACM Comput. Graph. Interact. Tech.",
+      "details": "9, 3, Article 40",
+      "doi": "https://doi.org/10.1145/3816085"
+    },
+    {
+      "id": "pub_1",
+      "title": "Test",
+      "year": "2024",
+      "authors": "A. B., C. D.",
+      "journal": "Proceedings of CHI Conference"
+    }
+  ],
+  "news": [
+    {
+      "title": "Test 1",
+      "date": "2025",
+      "shortDesc": "",
+      "content": "",
+      "id": "id_1785397645640"
+    },
+    {
+      "id": "news_0",
+      "title": "Expanded Conference 2026 Website online!",
+      "date": "September 2026",
+      "shortDesc": "The research group will present latest XR findings at the upcoming festival.",
+      "content": "We are thrilled to announce that the Digital Arts Research Group will be exhibiting our latest interactive installations at Ars Electronica.\n\nCome visit our booth to experience immersive technologies that bridge the gap between human perception and digital environments.",
+      "imageUrl": "images/news/Expanded.png"
+    }
+  ]
+}
+</script>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/effects.js"></script>
+
+
+</body></html>
