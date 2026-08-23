@@ -440,6 +440,15 @@
         updateViewAllButton('dynamic-projects-grid', 'projects', allData.projects.length, 'VIEW ALL PROJECTS');
     }
 
+    // Placeholder for people without a photo: initials derived from the name
+    // ("Jürgen Hagler" -> "JH"). The old `initials` field is ignored on purpose
+    // - it only held dummy values and is no longer editable.
+    function initialsOf(t) {
+        const parts = String(t.name || '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return '?';
+        return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+    }
+
     function renderTeam() {
         // Four per row; an incomplete last row is centred (see .team-grid in
         // the stylesheet), so the portrait size stays the same for any team size.
@@ -450,7 +459,7 @@
                 <div class="w-1/2 mx-auto mt-8 aspect-square bg-[#e5e5e5] flex items-center justify-center relative overflow-hidden rounded-full border-2 border-transparent group-hover:border-accent transition-colors">
                     ${t.imageUrl
                         ? '<img src="' + esc(t.imageUrl) + '" alt="" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">'
-                        : '<span class="text-4xl font-din font-bold text-main/20 transition-colors">' + esc(t.initials || 'XY') + '</span>'}
+                        : '<span class="text-4xl font-din font-bold text-main/20 transition-colors">' + esc(initialsOf(t)) + '</span>'}
                 </div>
                 <div class="p-6">
                     <h4 class="font-din font-bold text-lg mb-1">${esc(t.name)}</h4>
@@ -555,7 +564,18 @@
             const email = $('tm-email');
             email.textContent = t.email || '';
             email.href = 'mailto:' + (t.email || '');
-            setImage($('tm-img-container'), t.imageUrl, t.initials || 'XY', 'text-main/20 font-din font-bold text-6xl');
+            // The whole CONTACT block disappears when there is no e-mail.
+            $('tm-contact-block').classList.toggle('hidden', !t.email);
+            // Profile links (Pure research portal, Google Scholar) - only the filled ones.
+            const links = [
+                ['Research Portal (Pure)', normalizeUrl(t.pure)],
+                ['Google Scholar', normalizeUrl(t.scholar)]
+            ].filter(([, url]) => url);
+            $('tm-links').innerHTML = links.map(([label, url]) =>
+                '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="block font-medium text-lg text-accent hover:text-main transition-colors interactive">' + esc(label) + ' &#8599;</a>'
+            ).join('');
+            $('tm-links-block').classList.toggle('hidden', !links.length);
+            setImage($('tm-img-container'), t.imageUrl, initialsOf(t), 'text-main/20 font-din font-bold text-6xl');
             showModal('team-modal');
         }
     };
@@ -627,9 +647,10 @@
             display: 'name', hasImage: true,
             fields: [
                 ['name', 'Full Name'],
-                ['initials', 'Initials (e.g. XY)'],
                 ['role', 'Role (e.g. Researcher)'],
                 ['email', 'Email Address'],
+                ['pure', 'FH Research Portal – Pure (optional, e.g. https://pure.fh-ooe.at/de/persons/…)'],
+                ['scholar', 'Google Scholar profile (optional, e.g. https://scholar.google.com/citations?user=…)'],
                 ['bio', 'Biography / Details', 'area']
             ]
         },
@@ -903,7 +924,7 @@
         // images inside cards would otherwise bloat the file.
         ['dynamic-news-grid', 'dynamic-projects-grid', 'dynamic-team-grid',
          'dynamic-recent-pubs', 'pubs-archive-list', 'pubs-year-nav', 'pubs-count',
-         'admin-list-view', 'form-fields-container'].forEach(id => {
+         'admin-list-view', 'form-fields-container', 'tm-links'].forEach(id => {
             const el = clone.querySelector('#' + id);
             if (el) el.innerHTML = '';
         });
@@ -925,6 +946,12 @@
         });
         const heroImg = clone.querySelector('#main-hero-img');
         if (heroImg) heroImg.setAttribute('src', HERO_DEFAULT_SRC); // re-set from data on load
+        // Profile overlay: back to its neutral state.
+        const linksBlock = clone.querySelector('#tm-links-block');
+        if (linksBlock) linksBlock.classList.add('hidden');
+        const contactBlock = clone.querySelector('#tm-contact-block');
+        if (contactBlock) contactBlock.classList.remove('hidden');
+        ['tm-name', 'tm-role', 'tm-bio', 'tm-email'].forEach(id => { const el = clone.querySelector('#' + id); if (el) el.textContent = ''; });
         // renderTeam picks the column count per team size - keep the file stable.
         const teamGrid = clone.querySelector('#dynamic-team-grid');
         if (teamGrid) teamGrid.className = 'team-grid';

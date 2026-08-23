@@ -141,6 +141,7 @@ anschließend die drei Adressen im `<head>` umstellen, siehe
 | Projekte | „Broach AI“ und „Theaterautomat“: Status, Team, Partner und beide Beschreibungen leer |
 | Projekte | „LudaViz“ nennt als Team „Prof. Dr. X. Y.“, „Expanded“ nennt „Team Member 2“ |
 | Team | 7 von 9 Personen ohne E-Mail und ohne Biografie |
+| Team | Noch niemand hat einen Pure- oder Google-Scholar-Link hinterlegt (neue, optionale Felder im Personen-Formular) |
 | Team | Michi und Juergen haben Dummy-Adressen (`x.y@fh-ooe.at`, `tm1@fh-ooe.at`) und „Bio.“ als Text |
 | Team | Alle Namen sind Kurzformen – für eine Forschungsgruppe nach außen vermutlich eher vollständige Namen mit Titel |
 
