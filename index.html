@@ -30,7 +30,7 @@
     <link rel="apple-touch-icon" href="images/favicon-180.png">
     <meta name="theme-color" content="#094669">
 
-    <link rel="stylesheet" href="assets/css/style.css?v=2026-08-23c">
+    <link rel="stylesheet" href="assets/css/style.css?v=2026-08-23d">
 </head>
 <body class="selection:bg-accent selection:text-white relative">
 
@@ -230,86 +230,112 @@
         </div>
     </footer>
 
-    <!-- Detail modals -->
+    <!-- Detail modals. Same vocabulary as the front page: wordmark in the top
+         bar, a white "sheet" with hairline border and accent top line (the
+         card language), eyebrow label -> title -> short accent bar. -->
     <div id="news-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="nm-title">
-        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+        <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
+            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE ARTICLE <span aria-hidden="true">✕</span>
             </button>
         </div>
-        <div class="max-w-[1000px] mx-auto px-6 pb-32 pt-12">
-            <div id="nm-img-container" class="w-full h-[40vh] bg-[#e5e5e5] mb-12 flex items-center justify-center overflow-hidden">
-                <span class="text-main/40 font-din tracking-widest">NEWS_IMAGE</span>
-            </div>
-            <span id="nm-date" class="text-sm font-din tracking-widest text-accent mb-4 block border-l-2 border-accent pl-3">DATE</span>
-            <h2 id="nm-title" class="text-4xl md:text-6xl font-din font-bold mb-8 text-main">Title</h2>
-            <div id="nm-content" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[75ch] whitespace-pre-line font-light">Content</div>
+        <div class="max-w-[1000px] mx-auto px-6 py-20">
+            <article class="bg-white border border-[#d1d1d1] shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
+                <div id="nm-img-container" class="w-full h-[40vh] bg-[#e5e5e5] flex items-center justify-center overflow-hidden">
+                    <span class="text-main/40 font-din tracking-widest">NEWS_IMAGE</span>
+                </div>
+                <div class="p-6 md:p-12">
+                    <span id="nm-date" class="text-[10px] font-din tracking-widest text-accent font-bold block mb-4">DATE</span>
+                    <h2 id="nm-title" class="text-4xl md:text-6xl font-din font-bold mb-6 text-main leading-tight">Title</h2>
+                    <div class="w-12 h-1 bg-accent mb-8"></div>
+                    <div id="nm-content" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[75ch] whitespace-pre-line font-light">Content</div>
+                </div>
+            </article>
         </div>
     </div>
 
     <div id="project-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="pm-title">
-        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm">
+        <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
+            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
-        <div class="max-w-[1200px] mx-auto px-6 pb-32">
-            <div id="pm-img-container" class="w-full h-[40vh] md:h-[60vh] bg-[#e5e5e5] mb-12 flex items-center justify-center overflow-hidden">
-                <span class="text-main/40 font-din tracking-widest">PROJECT_IMAGE</span>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <div class="lg:col-span-8">
-                    <span id="pm-status" class="text-sm font-din tracking-widest text-accent mb-4 block border-l-2 border-accent pl-3">STATUS</span>
-                    <h2 id="pm-title" class="text-4xl md:text-6xl font-din font-bold mb-8 text-main">Title</h2>
-                    <div id="pm-content" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[75ch] whitespace-pre-line font-light">Content</div>
+        <div class="max-w-[1200px] mx-auto px-6 py-20">
+            <article class="bg-white border border-[#d1d1d1] shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
+                <div id="pm-img-container" class="w-full h-[40vh] md:h-[60vh] bg-[#e5e5e5] flex items-center justify-center overflow-hidden">
+                    <span class="text-main/40 font-din tracking-widest">PROJECT_IMAGE</span>
                 </div>
-                <div class="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-[#d1d1d1] pt-8 lg:pt-0 lg:pl-12">
-                    <h4 class="font-din tracking-widest text-sm mb-4 text-main font-bold">RESEARCHERS</h4>
-                    <p id="pm-team" class="font-light mb-8 text-main/80">Names</p>
-
-                    <h4 class="font-din tracking-widest text-sm mb-4 text-main font-bold">FUNDING / PARTNERS</h4>
-                    <p id="pm-partners" class="font-light text-main/80">Partners</p>
+                <div class="p-6 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <div class="lg:col-span-8">
+                        <span id="pm-status" class="text-[10px] font-din tracking-widest text-accent font-bold block mb-4">STATUS</span>
+                        <h2 id="pm-title" class="text-4xl md:text-6xl font-din font-bold mb-6 text-main leading-tight">Title</h2>
+                        <div class="w-12 h-1 bg-accent mb-8"></div>
+                        <div id="pm-content" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[75ch] whitespace-pre-line font-light">Content</div>
+                    </div>
+                    <div class="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-[#d1d1d1] pt-8 lg:pt-0 lg:pl-12 space-y-6">
+                        <div class="border-l-2 border-main/10 pl-4">
+                            <h4 class="text-[10px] font-din tracking-widest text-accent font-bold mb-1">RESEARCHERS</h4>
+                            <p id="pm-team" class="font-light text-main/80">Names</p>
+                        </div>
+                        <div class="border-l-2 border-main/10 pl-4">
+                            <h4 class="text-[10px] font-din tracking-widest text-accent font-bold mb-1">FUNDING / PARTNERS</h4>
+                            <p id="pm-partners" class="font-light text-main/80">Partners</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </article>
         </div>
     </div>
 
     <div id="team-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="tm-name">
-        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+        <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
+            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE PROFILE <span aria-hidden="true">✕</span>
             </button>
         </div>
         <div class="max-w-[1200px] mx-auto px-6 py-20">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
-                <div class="md:col-span-4">
-                    <div id="tm-img-container" class="w-2/3 aspect-square rounded-full mx-auto bg-[#e5e5e5] mb-8 flex items-center justify-center overflow-hidden border-4 border-accent"><span class="text-main/20 font-din font-bold text-6xl">XY</span></div>
-                    <div class="space-y-6">
-                        <div class="border-l-2 border-main/10 pl-4">
-                            <h4 class="font-din tracking-widest text-xs opacity-50 mb-1">ROLE</h4>
-                            <p id="tm-role" class="font-medium text-lg text-main"></p>
-                        </div>
-                        <div id="tm-contact-block" class="border-l-2 border-main/10 pl-4">
-                            <h4 class="font-din tracking-widest text-xs opacity-50 mb-1">CONTACT</h4>
-                            <a href="mailto:" id="tm-email" class="font-medium text-lg text-accent hover:text-main transition-colors interactive break-all"></a>
-                        </div>
-                        <div id="tm-links-block" class="border-l-2 border-main/10 pl-4 hidden">
-                            <h4 class="font-din tracking-widest text-xs opacity-50 mb-1">PROFILES</h4>
-                            <div id="tm-links" class="space-y-2"></div>
+            <article class="bg-white border border-[#d1d1d1] shadow-sm relative overflow-hidden p-6 md:p-12">
+                <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                    <div class="md:col-span-4">
+                        <div id="tm-img-container" class="w-2/3 aspect-square rounded-full mx-auto bg-[#e5e5e5] mb-8 flex items-center justify-center overflow-hidden border-4 border-accent"><span class="text-main/20 font-din font-bold text-6xl">XY</span></div>
+                        <div class="space-y-6">
+                            <div class="border-l-2 border-main/10 pl-4">
+                                <h4 class="text-[10px] font-din tracking-widest text-accent font-bold mb-1">ROLE</h4>
+                                <p id="tm-role" class="font-medium text-lg text-main"></p>
+                            </div>
+                            <div id="tm-contact-block" class="border-l-2 border-main/10 pl-4">
+                                <h4 class="text-[10px] font-din tracking-widest text-accent font-bold mb-1">CONTACT</h4>
+                                <a href="mailto:" id="tm-email" class="font-medium text-lg text-accent hover:text-main transition-colors interactive break-all"></a>
+                            </div>
+                            <div id="tm-links-block" class="border-l-2 border-main/10 pl-4 hidden">
+                                <h4 class="text-[10px] font-din tracking-widest text-accent font-bold mb-1">PROFILES</h4>
+                                <div id="tm-links" class="space-y-2"></div>
+                            </div>
                         </div>
                     </div>
+                    <div class="md:col-span-8 md:pl-8">
+                        <span class="text-[10px] font-din tracking-widest text-accent font-bold block mb-4">TEAM</span>
+                        <h2 id="tm-name" class="text-4xl md:text-6xl font-din font-bold mb-6 text-main leading-tight"></h2>
+                        <div class="w-12 h-1 bg-accent mb-8"></div>
+                        <div id="tm-bio" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[65ch] whitespace-pre-line font-light"></div>
+                    </div>
                 </div>
-                <div class="md:col-span-8 md:pl-8">
-                    <h2 id="tm-name" class="text-4xl md:text-6xl font-din font-bold mb-8 text-main"></h2>
-                    <div id="tm-bio" class="text-lg leading-[1.8] text-main/90 space-y-6 max-w-[65ch] mb-16 whitespace-pre-line font-light"></div>
-                </div>
-            </div>
+            </article>
         </div>
     </div>
 
     <div id="pubs-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="pubs-archive-title">
         <div class="sticky top-0 w-full flex flex-wrap justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-            <div id="pubs-year-nav" class="flex flex-wrap gap-2" aria-label="Jump to year"></div>
+            <div class="flex flex-wrap items-center gap-6">
+                <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
+                <div id="pubs-year-nav" class="flex flex-wrap gap-2" aria-label="Jump to year"></div>
+            </div>
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2 ml-auto">
                 CLOSE ARCHIVE <span aria-hidden="true">✕</span>
             </button>
@@ -328,12 +354,15 @@
          Forschungs & Entwicklungs GmbH). Fields marked [ZU ERGÄNZEN] still need
          a value; please have the whole block confirmed once before going live. -->
     <div id="imprint-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="imprint-title">
-        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+        <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
+            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
         <div class="max-w-[1000px] mx-auto px-6 py-20">
+            <div class="bg-white border border-[#d1d1d1] shadow-sm relative overflow-hidden p-6 md:p-12">
+                <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
             <h2 id="imprint-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
                 <span class="w-4 h-4 bg-accent block"></span> IMPRINT
             </h2>
@@ -367,6 +396,7 @@
                     <p class="text-base font-light leading-relaxed">© Digital Arts Lab and respective authors.</p>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
@@ -374,12 +404,15 @@
          draft for a static site on GitHub Pages (no cookies, no tracking, no
          third-party embeds). Please have it confirmed before going live. -->
     <div id="privacy-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
-        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+        <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
+            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
         <div class="max-w-[1000px] mx-auto px-6 py-20">
+            <div class="bg-white border border-[#d1d1d1] shadow-sm relative overflow-hidden p-6 md:p-12">
+                <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
             <h2 id="privacy-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
                 <span class="w-4 h-4 bg-accent block"></span> PRIVACY
             </h2>
@@ -420,16 +453,20 @@
                     <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Datum]</p>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
     <div id="contact-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="contact-title">
-        <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
+        <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
+            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
         <div class="max-w-[1000px] mx-auto px-6 py-20">
+            <div class="bg-white border border-[#d1d1d1] shadow-sm relative overflow-hidden p-6 md:p-12">
+                <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
             <h2 id="contact-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
                 <span class="w-4 h-4 bg-accent block"></span> CONTACT
             </h2>
@@ -462,6 +499,7 @@
                         <p class="text-base font-light leading-relaxed">Individual contact details are listed with each team member in the <a href="#team" class="text-accent hover:text-main transition-colors interactive font-medium">team section</a>.</p>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -759,8 +797,8 @@
 }
 </script>
 
-    <script src="assets/js/app.js?v=2026-08-23c"></script>
-    <script src="assets/js/effects.js?v=2026-08-23c"></script>
+    <script src="assets/js/app.js?v=2026-08-23d"></script>
+    <script src="assets/js/effects.js?v=2026-08-23d"></script>
 
 
 
