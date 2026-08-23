@@ -47,6 +47,7 @@
                 <a href="#projects" class="hover:text-accent transition-colors interactive">PROJECTS</a>
                 <a href="#team" class="hover:text-accent transition-colors interactive">TEAM</a>
                 <a href="#publications" class="hover:text-accent transition-colors interactive">PUBLICATIONS</a>
+                <a href="#contact" data-action="open-route" data-route="contact" class="hover:text-accent transition-colors interactive">CONTACT</a>
             </div>
             <button type="button" id="nav-toggle" data-action="toggle-nav" class="nav-toggle interactive" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menu">
                 <span class="nav-toggle-bar"></span>
@@ -60,6 +61,7 @@
             <a href="#projects" class="mobile-nav-link interactive">PROJECTS</a>
             <a href="#team" class="mobile-nav-link interactive">TEAM</a>
             <a href="#publications" class="mobile-nav-link interactive">PUBLICATIONS</a>
+            <a href="#contact" data-action="open-route" data-route="contact" class="mobile-nav-link interactive">CONTACT</a>
         </div>
     </nav>
 
@@ -313,109 +315,100 @@
     </div>
 
     <!-- Legal pages.
-         ACHTUNG: Entwurf. Alle mit [ZU ERGÄNZEN] markierten Felder ausfüllen und
-         den Text vor dem Live-Gang von der FH-Rechtsabteilung prüfen lassen.
-         Die FH OÖ hat zentrale Impressums- und Datenschutztexte - im Zweifel
-         diese übernehmen bzw. darauf verlinken. -->
+         Imprint mirrors the one of digitalmedialab.at (same legal entity: FH OÖ
+         Forschungs & Entwicklungs GmbH). Fields marked [ZU ERGÄNZEN] still need
+         a value; please have the whole block confirmed once before going live. -->
     <div id="imprint-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="imprint-title">
         <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
-        <div class="max-w-[1000px] mx-auto px-6 py-20" lang="de">
+        <div class="max-w-[1000px] mx-auto px-6 py-20">
             <h2 id="imprint-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
                 <span class="w-4 h-4 bg-accent block"></span> IMPRINT
             </h2>
-            <p class="text-lg leading-[1.8] max-w-[70ch] text-main/80 font-light mb-12">
-                Offenlegung gemäß § 5 E-Commerce-Gesetz (ECG) und § 25 Mediengesetz.
-            </p>
             <div class="space-y-6">
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">MEDIENINHABER UND DIENSTEANBIETER</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: vollständiger Name der Rechtsträgerin]<br>Fachhochschule Oberösterreich, Campus Hagenberg</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">MEDIA OWNER AND PUBLISHER</h3>
+                    <p class="text-base font-light leading-relaxed">FH Upper Austria Research and Development GmbH<br>Digital Arts Lab<br>Roseggerstrasse 15<br>4600 Wels, Austria</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">ANSCHRIFT</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Straße und Hausnummer]<br>[ZU ERGÄNZEN: PLZ und Ort], Österreich</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">CONTACT INFORMATION</h3>
+                    <p class="text-base font-light leading-relaxed">E-mail: <a href="mailto:[ZU ERGÄNZEN]" class="text-accent hover:text-main transition-colors interactive font-medium break-all">[ZU ERGÄNZEN: Lab-Adresse, z.B. dalab@fh-hagenberg.at]</a></p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">KONTAKT</h3>
-                    <p class="text-base font-light leading-relaxed">Telefon: [ZU ERGÄNZEN]<br>E-Mail: [ZU ERGÄNZEN]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">COMPANY DETAILS</h3>
+                    <p class="text-base font-light leading-relaxed">UID: ATU 57300236<br>FN: 236733m<br>Commercial register court: Landesgericht Wels</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">RECHTSFORM, FIRMENBUCH, UID</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Rechtsform]<br>Firmenbuchnummer: [ZU ERGÄNZEN] · Firmenbuchgericht: [ZU ERGÄNZEN]<br>UID-Nummer: [ZU ERGÄNZEN]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">IMAGE CREDITS</h3>
+                    <p class="text-base font-light leading-relaxed">Digital Arts Lab if not stated otherwise.</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">VERTRETUNGSBEFUGTE</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Geschäftsführung / vertretungsbefugte Organe]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">TECHNICAL IMPLEMENTATION AND SUPPORT</h3>
+                    <p class="text-base font-light leading-relaxed">In the event of technical problems send an e-mail to: <a href="mailto:[ZU ERGÄNZEN]" class="text-accent hover:text-main transition-colors interactive font-medium break-all">[ZU ERGÄNZEN: Lab-Adresse]</a></p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">AUFSICHTSBEHÖRDE</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: zuständige Aufsichtsbehörde]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">LIABILITY</h3>
+                    <p class="text-base font-light leading-relaxed">The texts on the website of the Digital Arts Lab have been carefully checked. We cannot, however, guarantee the accuracy, completeness and currency of the information provided. The Digital Arts Lab can therefore not be held responsible for the content of the texts. Links to other websites have been carefully selected. As the Digital Arts Lab has no influence over their content, it cannot be held liable for it.</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">INHALTLICH VERANTWORTLICH</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Name] · Digital Arts Lab</p>
-                </div>
-                <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">BLATTLINIE</h3>
-                    <p class="text-base font-light leading-relaxed">Darstellung der Forschungstätigkeit, Projekte, Publikationen und Mitglieder des Digital Arts Lab.</p>
-                </div>
-                <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">BILDNACHWEIS</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Urheber der Team-, Projekt- und News-Bilder]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">COPYRIGHT</h3>
+                    <p class="text-base font-light leading-relaxed">&copy; Digital Arts Lab and respective authors.</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Privacy: digitalmedialab.at has no privacy notice to mirror. This is a
+         draft for a static site on GitHub Pages (no cookies, no tracking, no
+         third-party embeds). Please have it confirmed before going live. -->
     <div id="privacy-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
         <div class="sticky top-0 w-full flex justify-end p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b">
             <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
-        <div class="max-w-[1000px] mx-auto px-6 py-20" lang="de">
+        <div class="max-w-[1000px] mx-auto px-6 py-20">
             <h2 id="privacy-title" class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
                 <span class="w-4 h-4 bg-accent block"></span> PRIVACY
             </h2>
             <p class="text-lg leading-[1.8] max-w-[70ch] text-main/80 font-light mb-12">
-                Informationen zur Verarbeitung personenbezogener Daten gemäß Art. 13 DSGVO.
+                Information on the processing of personal data pursuant to Art. 13 GDPR.
             </p>
             <div class="space-y-6">
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">VERANTWORTLICHER</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Name und Anschrift der verantwortlichen Stelle - identisch mit dem Impressum]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">CONTROLLER</h3>
+                    <p class="text-base font-light leading-relaxed">FH Upper Austria Research and Development GmbH<br>Digital Arts Lab<br>Roseggerstrasse 15<br>4600 Wels, Austria<br>E-mail: <a href="mailto:[ZU ERGÄNZEN]" class="text-accent hover:text-main transition-colors interactive font-medium break-all">[ZU ERGÄNZEN: Lab-Adresse]</a></p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">DATENSCHUTZBEAUFTRAGTE:R</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Kontaktdaten]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">DATA PROTECTION OFFICER</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Kontakt des/der Datenschutzbeauftragten der FH OÖ]</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">KEINE COOKIES, KEIN TRACKING</h3>
-                    <p class="text-base font-light leading-relaxed">Diese Website setzt keine Cookies, verwendet keine Analyse- oder Trackingdienste und bindet keine Inhalte von Drittanbietern ein. Schriftarten werden lokal vom eigenen Server geladen, es findet insbesondere keine Verbindung zu Google Fonts statt. Beim Besuch der Seite werden dadurch keine Daten an Dritte übermittelt.</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">NO COOKIES, NO TRACKING</h3>
+                    <p class="text-base font-light leading-relaxed">This website does not set cookies, does not use analytics or tracking services and does not embed third-party content. Fonts are served from the website itself; in particular, no connection to Google Fonts is made. Visiting this website therefore transmits no data to third parties beyond the hosting described below.</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">LOKALE SPEICHERUNG IM BROWSER</h3>
-                    <p class="text-base font-light leading-relaxed">Für die Redaktion der Inhalte nutzt diese Seite den lokalen Browserspeicher (localStorage). Dort abgelegte Daten verbleiben ausschließlich auf dem jeweiligen Gerät, werden nicht übertragen und lassen keine Rückschlüsse auf einzelne Personen zu. Für Besucherinnen und Besucher wird nichts gespeichert.</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">HOSTING AND SERVER LOGS</h3>
+                    <p class="text-base font-light leading-relaxed">This website is hosted on GitHub Pages, a service of GitHub Inc. (USA). When the site is accessed, GitHub technically processes access data (in particular IP address, time of access, requested file, browser identification) to deliver and secure the service. The legal basis is Art. 6 (1) (f) GDPR (legitimate interest in the secure and efficient operation of the website). Details: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener" class="text-accent hover:text-main transition-colors interactive font-medium break-all">GitHub General Privacy Statement</a>.</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">HOSTING UND SERVER-LOGFILES</h3>
-                    <p class="text-base font-light leading-relaxed">[ENTWURF - GILT NUR BEI HOSTING ÜBER GITHUB PAGES, VOR LIVE-GANG PRÜFEN:] Diese Website wird über GitHub Pages gehostet, einen Dienst der GitHub Inc. (USA). Beim Aufruf der Seite verarbeitet GitHub technisch bedingt Zugriffsdaten (insbesondere IP-Adresse, Zeitpunkt, abgerufene Datei, Browserkennung) zur Bereitstellung und Absicherung des Dienstes. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und effizienten Betrieb der Website). Details: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener" class="text-accent hover:text-main transition-colors interactive font-medium break-all">GitHub General Privacy Statement</a>.</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">LOCAL STORAGE IN YOUR BROWSER</h3>
+                    <p class="text-base font-light leading-relaxed">For editing its content, this site uses the browser's local storage (localStorage). Data stored there remains solely on the respective device, is not transmitted and does not allow any conclusions about individual persons. For visitors, nothing is stored.</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">KONTAKTAUFNAHME PER E-MAIL</h3>
-                    <p class="text-base font-light leading-relaxed">Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir Ihre Angaben ausschließlich zur Bearbeitung Ihrer Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">CONTACT BY E-MAIL</h3>
+                    <p class="text-base font-light leading-relaxed">If you contact us by e-mail, we process your details solely to handle your enquiry. The legal basis is Art. 6 (1) (f) GDPR (legitimate interest in responding to enquiries).</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">IHRE RECHTE</h3>
-                    <p class="text-base font-light leading-relaxed">Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung. Wenden Sie sich dazu an die oben genannte verantwortliche Stelle. Darüber hinaus steht Ihnen ein Beschwerderecht bei der Österreichischen Datenschutzbehörde zu.</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">YOUR RIGHTS</h3>
+                    <p class="text-base font-light leading-relaxed">You have the right to access, rectification, erasure, restriction of processing, data portability and to object to processing. Please contact the controller named above. You also have the right to lodge a complaint with the Austrian Data Protection Authority (Datenschutzbehörde).</p>
                 </div>
                 <div class="border-l-2 border-main/10 pl-4">
-                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">STAND</h3>
-                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Datum der letzten Aktualisierung]</p>
+                    <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">LAST UPDATED</h3>
+                    <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN: Datum]</p>
                 </div>
             </div>
         </div>
@@ -439,7 +432,7 @@
                     <div class="border-l-2 border-main/10 pl-4">
                         <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">EMAIL</h3>
                         <p class="text-base font-light leading-relaxed">
-                            <a href="mailto:[ZU ERGÄNZEN]" class="text-accent hover:text-main transition-colors interactive font-medium break-all">[ZU ERGÄNZEN: allgemeine Kontaktadresse]</a>
+                            <a href="mailto:[ZU ERGÄNZEN]" class="text-accent hover:text-main transition-colors interactive font-medium break-all">[ZU ERGÄNZEN: Lab-Adresse, z.B. dalab@fh-hagenberg.at]</a>
                         </p>
                     </div>
                     <div class="border-l-2 border-main/10 pl-4">
@@ -447,13 +440,11 @@
                         <p class="text-base font-light leading-relaxed">
                             Digital Arts Lab<br>
                             University of Applied Sciences Upper Austria<br>
-                            Campus Hagenberg<br>
-                            [ZU ERGÄNZEN: Straße, PLZ Ort], Austria
+                            School of Informatics, Communication and Media<br>
+                            Softwarepark 13<br>
+                            4232 Hagenberg im Mühlkreis<br>
+                            Austria
                         </p>
-                    </div>
-                    <div class="border-l-2 border-main/10 pl-4">
-                        <h3 class="font-din tracking-widest text-xs opacity-50 mb-1">PHONE</h3>
-                        <p class="text-base font-light leading-relaxed">[ZU ERGÄNZEN]</p>
                     </div>
                 </div>
                 <div class="space-y-6">

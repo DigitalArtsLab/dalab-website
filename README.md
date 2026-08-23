@@ -117,7 +117,7 @@ Checkliste dessen, was noch echte Inhalte braucht. Alles davon ist über das
 CMS pflegbar, nichts davon erfordert Code.
 
 **Rechtstexte** – siehe [Impressum, Datenschutz, Kontakt](#impressum-datenschutz-kontakt).
-15 Felder sind mit `[ZU ERGÄNZEN]` markiert.
+Noch offen: Lab-Mailadresse, Datenschutzbeauftragte:r, Datum (11 Stellen mit `[ZU ERGÄNZEN]`).
 
 **Eigene Domain** (falls gewünscht) – siehe
 [Veröffentlichen über GitHub Pages](#veröffentlichen-über-github-pages);
@@ -141,24 +141,37 @@ anschließend die drei Adressen im `<head>` umstellen, siehe
 
 ## Impressum, Datenschutz, Kontakt
 
-Die drei Links im Footer öffnen jeweils ein Overlay. Die Texte stehen direkt in
-`index.html` (nach dem Kommentar `<!-- Legal pages. -->`).
+Die drei Overlays sind über den Footer erreichbar, **Contact** zusätzlich über
+das Hauptmenü. Die Texte stehen direkt in `index.html` (nach dem Kommentar
+`<!-- Legal pages. -->`) und sind – wie die ganze Seite – auf Englisch.
 
-**Sie sind noch nicht fertig.** Alle Stellen, die mit `[ZU ERGÄNZEN: ...]`
-markiert sind, müssen ausgefüllt werden – Impressum und Datenschutzerklärung
-sind für eine FH-Einrichtung in Österreich rechtlich verpflichtend
-(§ 5 ECG, § 25 MedienG, Art. 13 DSGVO). Die Struktur bildet die
-Pflichtangaben ab, die Inhalte müssen von der FH kommen:
+**Impressum:** übernimmt Struktur und Firmendaten des Impressums von
+digitalmedialab.at – gleiche Rechtsträgerin (FH Upper Austria Research and
+Development GmbH, Roseggerstrasse 15, 4600 Wels; UID ATU 57300236,
+FN 236733m, LG Wels). Die dort zusätzlich genannte DVR-Nummer wurde bewusst
+weggelassen: das Datenverarbeitungsregister gibt es seit der DSGVO (2018) nicht
+mehr. Bitte einmal bestätigen lassen, dass auch das Digital Arts Lab unter
+dieser GmbH läuft.
+
+**Datenschutz:** digitalmedialab.at hat keinen Datenschutztext. Unserer ist ein
+Entwurf für eine statische Seite auf GitHub Pages (keine Cookies, kein Tracking,
+keine Drittanbieter – alles geprüft) mit der GmbH als Verantwortlicher. Vor dem
+Live-Gang einmal freigeben lassen.
+
+**Kontakt:** Campus-Adresse wie auf digitalmedialab.at (Softwarepark 13,
+4232 Hagenberg im Mühlkreis).
+
+**Was noch fehlt** – alles mit `[ZU ERGÄNZEN]` markiert:
+
+- die **Lab-Mailadresse** (z.B. `dalab@fh-hagenberg.at`) – steht an vier
+  Stellen (Impressum 2×, Datenschutz, Kontakt); am schnellsten per Suchen &
+  Ersetzen von `mailto:[ZU ERGÄNZEN]` und dem jeweiligen Anzeigetext,
+- Kontakt des/der **Datenschutzbeauftragten** der FH OÖ,
+- das **Datum** der Datenschutzerklärung.
 
 ```bash
 grep -n "ZU ERGÄNZEN" index.html
 ```
-
-Am einfachsten ist es, die zentralen Texte der FH OÖ zu übernehmen oder darauf
-zu verlinken und den Text vor dem Live-Gang von der Rechtsabteilung freigeben
-zu lassen. Was inhaltlich schon stimmt und geprüft ist: die Seite setzt keine
-Cookies, lädt nichts von Drittanbietern und holt die Schriften vom eigenen
-Server – der entsprechende Absatz im Datenschutztext ist also korrekt.
 
 ## Link-Vorschau und Favicon
 
