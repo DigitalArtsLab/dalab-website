@@ -30,9 +30,9 @@ dalab-website/
 
 1. Die **Live-Seite** (<https://michaellankes.github.io/dalab-website/>) im
    Browser öffnen. Der Admin-Zugang ist versteckt:
-   **am Computer einfach das Wort `admin` tippen** (nicht in ein Eingabefeld,
-   einfach auf der Seite) – oder **am Handy/Tablet 5× schnell auf das
-   „DIGITAL ARTS LAB“-Logo im Footer tippen**.
+   **einfach das Wort `admin` tippen** (nicht in ein Eingabefeld, einfach auf
+   der Seite). Das geht nur mit Tastatur – Inhalte pflegt man also am
+   Computer, nicht am Handy.
 2. Passwort eingeben (Standard: `dalab2026` – bitte ändern, siehe unten).
 3. Inhalte bearbeiten. Änderungen sind zunächst nur lokal im Browser gespeichert.
 4. **VERÖFFENTLICHEN** klicken → die Änderung geht direkt ins GitHub-Repo und
@@ -318,6 +318,28 @@ können eingeladene Kolleg:innen es dort nicht auswählen. Zwei Auswege:
 - Das Admin-Passwort des CMS bleibt, was es war: ein Sichtschutz. Die echte
   Zugangskontrolle ist jetzt GitHub – wer kein Token hat, kann nichts
   veröffentlichen, egal ob er das Passwort kennt.
+- **2-Faktor-Authentifizierung** auf GitHub für alle, die Schreibrecht haben
+  (Settings → Password and authentication). Das ist der wirksamste einzelne
+  Schutz, weil der GitHub-Account das ist, was hier wirklich geschützt wird.
+- **Nicht jede:r braucht Schreibrecht.** Collaborators mit „Write“ nur für
+  Leute, die veröffentlichen; alle anderen brauchen gar keinen Zugang, die
+  Seite ist öffentlich.
+- Die Seite liefert eine **Content-Security-Policy** aus (im `<head>` von
+  `index.html`): Es laufen nur die eigenen Scripts, und die Seite darf nur
+  mit GitHub, Crossref und DataCite reden. Das schützt die Tokens der
+  Redaktion davor, durch eingeschleusten Code ausgelesen zu werden. **Wird je
+  ein neuer externer Dienst eingebunden, muss er dort eingetragen werden**,
+  sonst blockiert der Browser ihn (sichtbar in der Browser-Konsole).
+
+### Was im schlimmsten Fall passieren kann
+
+Wird ein Token gestohlen, kann damit **die `index.html` dieses einen Repos
+überschrieben** werden – also die Website verunstaltet. Nicht mehr: keine
+anderen Repos, kein Account-Zugriff (bei Fine-grained Tokens; Classic Tokens
+mit `public_repo` reichen weiter, siehe oben). Und jeder Stand ist in der
+Git-History – zurücksetzen ist ein Klick auf GitHub („Revert“), danach das
+Token widerrufen. Besucher:innen der Seite sind zu keinem Zeitpunkt gefährdet:
+Die Seite setzt nichts, sammelt nichts und führt keinen fremden Code aus.
 
 ### Was beim Veröffentlichen passiert
 
@@ -381,11 +403,17 @@ crypto.subtle.digest('SHA-256', new TextEncoder().encode('NEUES-PASSWORT'))
 3. Den ausgegebenen Hash in `assets/js/app.js` bei `ADMIN_HASH` einsetzen.
 
 **Wichtig, ehrlich gesagt:** Der Passwortschutz ist ein Sichtschutz, keine echte
-Sicherheit – bei einer rein statischen Website kann technisch versierte Person
-den Check im Quellcode umgehen. Das ist hier aber unkritisch: Das Admin-Menü
-ändert nur die lokale Ansicht im Browser der jeweiligen Person, niemals die
-Website selbst. Auf den Server kommt nur, was ihr selbst per Export + Upload
-einspielt.
+Sicherheit – bei einer rein statischen Website kann eine technisch versierte
+Person den Check im Quellcode umgehen. Das ist hier aber unkritisch: Das
+Admin-Menü ändert nur die lokale Ansicht im Browser der jeweiligen Person,
+niemals die Website selbst. Veröffentlichen kann nur, wer ein GitHub-Token mit
+Schreibrecht hat.
+
+Zwei Regeln trotzdem: **Kein echtes Passwort wiederverwenden** (der Hash steht
+öffentlich im Repo und ist bei kurzen Passwörtern knackbar – ein FH-Passwort
+hätte hier nichts verloren) und das Standardpasswort einmal ändern, damit nicht
+jede:r, die/der dieses README liest, das CMS aufklappen kann. Ein langer, sonst
+nirgends benutzter Satz ist ideal.
 
 ## CSS neu bauen (nur nötig, wenn neue Tailwind-Klassen ins HTML/JS kommen)
 

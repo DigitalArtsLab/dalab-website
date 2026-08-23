@@ -152,3 +152,6 @@ body.has-custom-cursor #cursor-follower { display: block; }
 .team-grid > * { width: 100%; }
 @media (min-width: 640px)  { .team-grid > * { width: calc(50% - 1rem); } }
 @media (min-width: 768px)  { .team-grid > * { width: calc(25% - 1.5rem); } }
+
+/* Textareas in the admin form (replaces an inline style, which the CSP forbids) */
+.admin-textarea { height: 120px; resize: vertical; }

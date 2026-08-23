@@ -733,7 +733,7 @@
               </div>`
             : '';
         $('form-fields-container').innerHTML = doiBox + section.fields.map(([key, label, kind]) => kind === 'area'
-            ? `<div><label class="admin-label" for="field-${key}">${esc(label)}</label><textarea id="field-${key}" class="admin-input" style="height: 120px">${esc(data[key])}</textarea></div>`
+            ? `<div><label class="admin-label" for="field-${key}">${esc(label)}</label><textarea id="field-${key}" class="admin-input admin-textarea">${esc(data[key])}</textarea></div>`
             : `<div><label class="admin-label" for="field-${key}">${esc(label)}</label><input type="text" id="field-${key}" class="admin-input" value="${esc(data[key])}"></div>`
         ).join('');
     }
@@ -1308,8 +1308,7 @@
     window.addEventListener('resize', () => { if (window.innerWidth >= 1024) closeNav(); });
 
     // ---------- Hidden admin access ----------
-    // No visible ADMIN link. Access: type "admin" on the keyboard (desktop),
-    // or tap the footer logo 5x in quick succession (touch devices).
+    // No visible ADMIN link. Access: type "admin" on the keyboard.
     // Also removes the old ADMIN link from previously exported pages.
     document.querySelectorAll('[data-action="open-admin"]').forEach(el => el.remove());
 
@@ -1334,18 +1333,8 @@
         }
     });
 
-    const footerBrand = document.querySelector('footer a.interactive');
-    if (footerBrand) {
-        let taps = 0, tapTimer = null;
-        footerBrand.addEventListener('click', e => {
-            taps++;
-            clearTimeout(tapTimer);
-            tapTimer = setTimeout(() => { taps = 0; }, 1500);
-            // Only swallow the click that actually opens the admin - otherwise
-            // the logo stays an ordinary "back to top" link.
-            if (taps >= 5) { taps = 0; e.preventDefault(); requestAdmin(); }
-        });
-    }
+    // (The former "tap the footer logo 5x" shortcut was removed on purpose -
+    // the admin is reached by typing "admin" on a keyboard only.)
 
     $('admin-login-form').addEventListener('submit', e => {
         e.preventDefault();

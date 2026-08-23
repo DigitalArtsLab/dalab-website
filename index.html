@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth"><head>
     <meta charset="UTF-8">
+    <!-- Content Security Policy: only this site's own scripts run, and the page
+         may only talk to GitHub (publishing), Crossref and DataCite (DOI lookup).
+         Protects the editors' GitHub tokens against injected scripts. If a new
+         external service is ever added, it must be listed here. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data: https:; connect-src 'self' https://api.github.com https://api.crossref.org https://api.datacite.org; form-action 'self'; base-uri 'self'; object-src 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DA Lab | Digital Arts Research Group</title>
     <meta name="description" content="Research group at the University of Applied Sciences Upper Austria, Campus Hagenberg, exploring games &amp; interaction design and animation &amp; interactive art.">
