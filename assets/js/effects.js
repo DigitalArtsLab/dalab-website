@@ -44,11 +44,8 @@
     let width, height, dpr, cx, cy;
     function resize() {
         dpr = Math.min(window.devicePixelRatio || 1, 2);
-        // Size to the hero itself, not the viewport - the hero is shorter than
-        // the screen, and the swirl centre must sit on the logo.
-        const box = canvas.parentElement || document.body;
-        width = box.clientWidth || window.innerWidth;
-        height = box.clientHeight || window.innerHeight;
+        width = window.innerWidth;
+        height = window.innerHeight;
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
