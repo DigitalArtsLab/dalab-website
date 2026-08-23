@@ -25,8 +25,19 @@
 
     // ---------- Data ----------
     const STORAGE_KEY = 'dalab_standalone_data';
+    // The data this browser's edits started from - needed to tell "what did I
+    // change" from "what did somebody else publish meanwhile" when publishing.
+    const BASE_KEY = 'dalab_edit_base';
+    // What this browser last published. GitHub Pages serves the old file for up
+    // to ~10 minutes after a publish; this stops the stale-copy warning from
+    // firing in that window and lets us drop the local copy once the file
+    // has caught up.
+    const LAST_PUBLISHED_KEY = 'dalab_last_published';
     const HERO_DEFAULT_SRC = 'images/hero/DAlabLogo.png';
-    const initialData = JSON.parse($('initial-data').textContent);
+
+    // The file's own data, kept as a string so later edits can never mutate it.
+    const fileJson = JSON.stringify(JSON.parse($('initial-data').textContent));
+    const initialData = JSON.parse(fileJson);
 
     let allData;
     // True when the browser is showing a locally edited copy that no longer
@@ -36,18 +47,27 @@
     let usingStaleLocalCopy = false;
     try {
         const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
+        const lastPublished = localStorage.getItem(LAST_PUBLISHED_KEY);
+        if (stored && lastPublished && lastPublished === fileJson) {
+            // The file now contains exactly what we published - the local
+            // copy has done its job, back to a clean slate.
+            [STORAGE_KEY, BASE_KEY, LAST_PUBLISHED_KEY].forEach(k => localStorage.removeItem(k));
+            allData = JSON.parse(fileJson);
+        } else if (stored) {
             allData = JSON.parse(stored);
-            usingStaleLocalCopy = JSON.stringify(allData) !== JSON.stringify(initialData);
+            const storedJson = JSON.stringify(allData);
+            usingStaleLocalCopy = storedJson !== fileJson && storedJson !== lastPublished;
         } else {
-            allData = initialData;
+            allData = JSON.parse(fileJson);
         }
     } catch (err) {
-        allData = initialData;
+        allData = JSON.parse(fileJson);
     }
 
     function persist() {
         try {
+            // First edit in this browser: remember where it started from.
+            if (!localStorage.getItem(BASE_KEY)) localStorage.setItem(BASE_KEY, fileJson);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
             return true;
         } catch (err) {
@@ -240,7 +260,15 @@
         // on their own and leave the address bar untouched.
         const admin = open.filter(m => m.id.indexOf('admin-') === 0);
         if (admin.length) {
-            hideModals(open.filter(m => m.id.indexOf('admin-') !== 0).map(m => m.id));
+            // Only the topmost admin overlay closes (the token dialog sits on
+            // top of the panel) - everything else stays as it is.
+            const top = admin[admin.length - 1];
+            hideModals(open.filter(m => m !== top).map(m => m.id));
+            const remaining = document.querySelector('.modal.active');
+            if (remaining && !remaining.contains(document.activeElement)) {
+                const f = focusablesIn(remaining)[0];
+                if (f) f.focus();
+            }
             return;
         }
         if (history.state && history.state.dalabOverlay) { history.back(); return; }
@@ -706,9 +734,13 @@
     }
 
     // ---------- Export ----------
+    // Serialises data into the #initial-data tag. "<" is escaped so content
+    // can never terminate the script tag.
+    const dataTagContent = data => '\n' + JSON.stringify(data, null, 2).replace(/</g, '\\u003c') + '\n';
+
     // Writes the current data into the #initial-data JSON tag of a cleaned DOM clone.
     // No regex on source code - robust against any content.
-    function exportHtml() {
+    function buildExportHtml(data) {
         const clone = document.documentElement.cloneNode(true);
 
         clone.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
@@ -755,12 +787,16 @@
         if (heroImg) heroImg.setAttribute('src', HERO_DEFAULT_SRC); // re-set from data on load
         const preview = clone.querySelector('#admin-img-preview');
         if (preview) preview.innerHTML = '<span class="text-xs text-gray-400">No Image</span>';
+        // A publish that is still running must not leave its button disabled.
+        const pub = clone.querySelector('#btn-publish');
+        if (pub) { pub.removeAttribute('disabled'); pub.textContent = '\u{1F680} VERÖFFENTLICHEN'; }
 
-        // "<" escaped so content can never terminate the script tag.
-        clone.querySelector('#initial-data').textContent =
-            '\n' + JSON.stringify(allData, null, 2).replace(/</g, '\\u003c') + '\n';
+        clone.querySelector('#initial-data').textContent = dataTagContent(data);
+        return '<!DOCTYPE html>\n' + clone.outerHTML;
+    }
 
-        const blob = new Blob(['<!DOCTYPE html>\n' + clone.outerHTML], { type: 'text/html' });
+    function exportHtml() {
+        const blob = new Blob([buildExportHtml(allData)], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -773,6 +809,241 @@
         toast('&#9989; EXPORT ERFOLGREICH!',
             'Die heruntergeladene index.html enth&auml;lt alle aktuellen Inhalte. Ersetze damit die index.html im Website-Ordner (assets/ und images/ bleiben unver&auml;ndert).',
             'bg-green-800');
+    }
+
+    // ---------- Publish straight to GitHub ----------
+    // Writes index.html into the repo through the GitHub contents API, using a
+    // token the editor stores once in their own browser. The repo below must
+    // match where the site lives - change it when the repo moves (e.g. into
+    // an organisation).
+    const PUBLISH = { owner: 'michaellankes', repo: 'dalab-website', branch: 'main', path: 'index.html' };
+    const TOKEN_KEY = 'dalab_github_token';
+    const apiUrl = () => 'https://api.github.com/repos/' + PUBLISH.owner + '/' + PUBLISH.repo +
+        '/contents/' + PUBLISH.path;
+
+    const getToken = () => localStorage.getItem(TOKEN_KEY) || '';
+
+    // UTF-8 <-> base64 (btoa/atob alone break on umlauts).
+    function toBase64Utf8(str) {
+        const bytes = new TextEncoder().encode(str);
+        let bin = '';
+        for (let i = 0; i < bytes.length; i += 0x8000) {
+            bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+        }
+        return btoa(bin);
+    }
+    function fromBase64Utf8(b64) {
+        const bin = atob(b64.replace(/\s/g, ''));
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return new TextDecoder().decode(bytes);
+    }
+
+    function openTokenDialog(message) {
+        const hint = $('admin-token-hint');
+        hint.textContent = message || '';
+        hint.classList.toggle('hidden', !message);
+        $('admin-token-input').value = '';
+        $('btn-clear-token').classList.toggle('hidden', !getToken());
+        showModal('admin-token-modal');
+        $('admin-token-input').focus();
+    }
+
+    // Three-way merge of one list, keyed by item id.
+    //   base   = what this browser's edits started from
+    //   mine   = this browser's current data
+    //   theirs = what is in the repo right now
+    // Result starts from theirs (so other people's work and order survive) and
+    // replays only what changed here. An item touched on both sides is a
+    // conflict - nothing gets published then, nobody's work is overwritten.
+    function mergeList(listName, base, mine, theirs) {
+        const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+        const keyOf = i => String(i && i.id != null ? i.id : JSON.stringify(i));
+        const index = arr => new Map((arr || []).map(i => [keyOf(i), i]));
+        const B = index(base), M = index(mine), T = index(theirs);
+        const label = i => listName + ': „' + (i.title || i.name || keyOf(i)) + '“';
+
+        const result = [...(theirs || [])];
+        const conflicts = [];
+        const stats = { added: 0, changed: 0, removed: 0 };
+
+        // Deleted here.
+        B.forEach((b, id) => {
+            if (M.has(id) || !T.has(id)) return;
+            if (same(T.get(id), b)) {
+                result.splice(result.findIndex(i => keyOf(i) === id), 1);
+                stats.removed++;
+            } else {
+                conflicts.push(label(b) + ' wurde hier gelöscht, aber inzwischen von jemand anderem geändert');
+            }
+        });
+
+        // Added or changed here.
+        M.forEach((m, id) => {
+            const b = B.get(id), t = T.get(id);
+            if (!b) {
+                if (!t) {
+                    // News: newest on top - same rule as the editor uses.
+                    if (listName === 'news') result.unshift(m); else result.push(m);
+                    stats.added++;
+                } else if (!same(m, t)) {
+                    conflicts.push(label(m) + ' wurde hier und von jemand anderem gleichzeitig neu angelegt');
+                }
+                return;
+            }
+            if (same(m, b)) return;          // untouched here
+            if (!t) {
+                conflicts.push(label(m) + ' wurde hier geändert, aber inzwischen von jemand anderem gelöscht');
+            } else if (same(t, b)) {
+                result[result.findIndex(i => keyOf(i) === id)] = m;
+                stats.changed++;
+            } else if (!same(t, m)) {
+                conflicts.push(label(m) + ' wurde hier und von jemand anderem geändert');
+            }
+        });
+
+        return { result, conflicts, stats };
+    }
+
+    function mergeData(base, mine, theirs) {
+        const merged = JSON.parse(JSON.stringify(theirs));
+        const conflicts = [];
+        const summary = [];
+        const keys = new Set([...Object.keys(base), ...Object.keys(mine), ...Object.keys(theirs)]);
+        keys.forEach(key => {
+            const b = base[key], m = mine[key], t = theirs[key];
+            if (Array.isArray(m) || Array.isArray(t) || Array.isArray(b)) {
+                const r = mergeList(key, b, m, t);
+                merged[key] = r.result;
+                conflicts.push(...r.conflicts);
+                const parts = [];
+                if (r.stats.added) parts.push('+' + r.stats.added);
+                if (r.stats.changed) parts.push('~' + r.stats.changed);
+                if (r.stats.removed) parts.push('-' + r.stats.removed);
+                if (parts.length) summary.push(key + ' ' + parts.join(' '));
+                return;
+            }
+            // Scalars (heroImage): mine wins if untouched on their side.
+            if (JSON.stringify(m) === JSON.stringify(b)) return;
+            if (JSON.stringify(t) === JSON.stringify(b) || JSON.stringify(t) === JSON.stringify(m)) {
+                merged[key] = m;
+                summary.push(key);
+            } else {
+                conflicts.push(key + ' wurde hier und von jemand anderem geändert');
+            }
+        });
+        return { merged, conflicts, summary };
+    }
+
+    async function fetchRemote(token) {
+        const res = await fetch(apiUrl() + '?ref=' + encodeURIComponent(PUBLISH.branch), {
+            headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token },
+            cache: 'no-store'
+        });
+        if (!res.ok) throw Object.assign(new Error('GET ' + res.status), { status: res.status });
+        const json = await res.json();
+        const html = fromBase64Utf8(json.content);
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const tag = doc.querySelector('#initial-data');
+        if (!tag) throw new Error('Die Datei im Repo enthält keinen Datenblock (#initial-data).');
+        return { sha: json.sha, doc, data: JSON.parse(tag.textContent) };
+    }
+
+    let publishing = false;
+
+    async function publish() {
+        if (publishing) return;
+        const token = getToken();
+        if (!token) { openTokenDialog(); return; }
+
+        const btn = $('btn-publish');
+        publishing = true;
+        btn.disabled = true;
+        btn.textContent = '⏳ VERÖFFENTLICHE …';
+        const done = () => { publishing = false; btn.disabled = false; btn.textContent = '\u{1F680} VERÖFFENTLICHEN'; };
+
+        try {
+            const remote = await fetchRemote(token);
+            const baseJson = localStorage.getItem(BASE_KEY) || fileJson;
+            const { merged, conflicts, summary } = mergeData(JSON.parse(baseJson), allData, remote.data);
+
+            if (conflicts.length) {
+                toast('&#9888;&#65039; KONFLIKT &ndash; NICHTS VER&Ouml;FFENTLICHT',
+                    'Seit du angefangen hast, hat jemand anderes dieselben Eintr&auml;ge ge&auml;ndert:<br><br>' +
+                    conflicts.map(c => '&bull; ' + esc(c)).join('<br>') +
+                    '<br><br>Vorgehen: EXPORTIEREN als Sicherung, dann &bdquo;Lokale &Auml;nderungen verwerfen&ldquo;, ' +
+                    'die Eintr&auml;ge neu bearbeiten und erneut ver&ouml;ffentlichen.',
+                    'bg-red-800');
+                return;
+            }
+            if (JSON.stringify(merged) === JSON.stringify(remote.data)) {
+                toast('&#8505;&#65039; NICHTS ZU VER&Ouml;FFENTLICHEN', 'Der Stand im Repo entspricht bereits deinen Inhalten.');
+                return;
+            }
+
+            // The remote file is the shell - so a newer index.html in the repo
+            // (design or code changes) is never overwritten by an older copy
+            // that happens to be open in this browser. Only the data block
+            // changes. Also reset anything the DOMParser might carry over.
+            const doc = remote.doc;
+            doc.querySelector('#initial-data').textContent = dataTagContent(merged);
+            const html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+
+            const res = await fetch(apiUrl(), {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/vnd.github+json',
+                    Authorization: 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'CMS: ' + (summary.join(', ') || 'Inhalte aktualisiert'),
+                    content: toBase64Utf8(html),
+                    sha: remote.sha,
+                    branch: PUBLISH.branch
+                })
+            });
+            if (res.status === 409) {
+                toast('&#9888;&#65039; GLEICHZEITIG VER&Ouml;FFENTLICHT',
+                    'Jemand anderes hat in genau diesem Moment ver&ouml;ffentlicht. Bitte noch einmal auf VER&Ouml;FFENTLICHEN klicken &ndash; deine &Auml;nderungen werden dann zusammengef&uuml;hrt.',
+                    'bg-red-800');
+                return;
+            }
+            if (!res.ok) throw Object.assign(new Error('PUT ' + res.status), { status: res.status });
+            const result = await res.json();
+
+            // From now on this browser's edits start from what was just published.
+            allData = merged;
+            const mergedJson = JSON.stringify(merged);
+            localStorage.setItem(STORAGE_KEY, mergedJson);
+            localStorage.setItem(BASE_KEY, mergedJson);
+            localStorage.setItem(LAST_PUBLISHED_KEY, mergedJson);
+            usingStaleLocalCopy = false;
+            initApp();
+            renderAdminList();
+
+            const commitUrl = result.commit && result.commit.html_url;
+            toast('&#9989; VER&Ouml;FFENTLICHT!',
+                'Die &Auml;nderungen sind im Repo. Die Live-Seite zeigt sie nach etwa einer Minute' +
+                ' (GitHub kann die alte Fassung bis zu 10 Minuten zwischenspeichern &ndash; einfach sp&auml;ter neu laden).' +
+                (commitUrl ? '<br><br><a href="' + esc(commitUrl) + '" target="_blank" rel="noopener" class="hover:underline font-bold">Commit auf GitHub ansehen &#8599;</a>' : ''),
+                'bg-green-800');
+        } catch (err) {
+            const s = err && err.status;
+            if (s === 401) {
+                openTokenDialog('Das gespeicherte Token wird von GitHub nicht akzeptiert (abgelaufen oder widerrufen). Bitte ein neues eintragen.');
+            } else if (s === 404 || s === 403) {
+                openTokenDialog('GitHub verweigert den Zugriff auf ' + PUBLISH.owner + '/' + PUBLISH.repo +
+                    '. Meist fehlt dem Token der Zugriff auf dieses Repo oder das Schreibrecht auf Inhalte (Contents: Read and write). Bitte Token prüfen oder neu anlegen.');
+            } else {
+                toast('&#9888;&#65039; VER&Ouml;FFENTLICHEN FEHLGESCHLAGEN',
+                    esc(err && err.message ? err.message : String(err)) +
+                    '<br><br>Deine &Auml;nderungen sind weiterhin lokal gespeichert. Zur Not: EXPORTIEREN und die Datei von Hand ins Repo laden.',
+                    'bg-red-800');
+            }
+        } finally {
+            done();
+        }
     }
 
     // ---------- Events (one delegated listener instead of inline onclick) ----------
@@ -795,11 +1066,28 @@
         'delete-item': deleteItem,
         'upload-hero': () => $('hero-logo-upload').click(),
         'export': exportHtml,
+        'publish': publish,
+        'edit-token': () => openTokenDialog(),
+        'save-token': () => {
+            const t = $('admin-token-input').value.trim();
+            if (!t) { $('admin-token-input').focus(); return; }
+            localStorage.setItem(TOKEN_KEY, t);
+            $('admin-token-input').value = '';
+            closeModals();                      // closes only the token dialog
+            toast('&#9989; TOKEN GESPEICHERT',
+                'Es bleibt nur in diesem Browser gespeichert. Du kannst jetzt direkt auf VER&Ouml;FFENTLICHEN klicken.');
+        },
+        'clear-token': () => {
+            localStorage.removeItem(TOKEN_KEY);
+            $('admin-token-input').value = '';
+            closeModals();
+            toast('&#8505;&#65039; TOKEN ENTFERNT', 'Zum Ver&ouml;ffentlichen muss wieder eines eingetragen werden.');
+        },
         'discard-local': () => {
             if (!confirm('Alle lokal in diesem Browser gespeicherten Änderungen verwerfen?\n\n'
                 + 'Danach siehst du wieder genau den Stand, der in der index.html steht. '
                 + 'Noch nicht exportierte Änderungen gehen dabei verloren.')) return;
-            localStorage.removeItem(STORAGE_KEY);
+            [STORAGE_KEY, BASE_KEY, LAST_PUBLISHED_KEY].forEach(k => localStorage.removeItem(k));
             sessionStorage.removeItem(STALE_WARNED_KEY);
             location.reload();
         }
@@ -864,6 +1152,10 @@
     $('admin-login-form').addEventListener('submit', e => {
         e.preventDefault();
         tryLogin();
+    });
+    $('admin-token-form').addEventListener('submit', e => {
+        e.preventDefault();
+        actions['save-token']();
     });
 
     $('image-path-input').addEventListener('input', e => {

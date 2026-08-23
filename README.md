@@ -28,22 +28,26 @@ dalab-website/
 
 ## Inhalte pflegen
 
-1. `index.html` im Browser öffnen. Der Admin-Zugang ist versteckt:
+1. Die **Live-Seite** (<https://michaellankes.github.io/dalab-website/>) im
+   Browser öffnen. Der Admin-Zugang ist versteckt:
    **am Computer einfach das Wort `admin` tippen** (nicht in ein Eingabefeld,
    einfach auf der Seite) – oder **am Handy/Tablet 5× schnell auf das
    „DIGITAL ARTS LAB“-Logo im Footer tippen**.
 2. Passwort eingeben (Standard: `dalab2026` – bitte ändern, siehe unten).
 3. Inhalte bearbeiten. Änderungen sind zunächst nur lokal im Browser gespeichert.
-4. **EXPORTIEREN** klicken → eine neue `index.html` wird heruntergeladen.
-5. Damit die `index.html` in diesem Ordner ersetzen. `assets/` und `images/` bleiben unverändert.
+4. **VERÖFFENTLICHEN** klicken → die Änderung geht direkt ins GitHub-Repo und
+   ist nach ~1 Minute online. Beim ersten Mal wird ein GitHub-Token abgefragt,
+   siehe [Veröffentlichen direkt aus dem CMS](#veröffentlichen-direkt-aus-dem-cms).
+   Alternativ **EXPORTIEREN** und die Datei von Hand ins Repo laden.
 
 ### Wenn hochgeladene Änderungen nicht erscheinen
 
 Punkt 3 hat einen Haken, den man kennen muss: Der Browser merkt sich die
 bearbeitete Fassung und zeigt sie **bevorzugt vor dem Inhalt der Datei**. Wer
-also exportiert, die Datei hochlädt und die Seite neu lädt, sieht im eigenen
-Browser weiter den alten Stand – die Datei auf dem Server ist trotzdem korrekt,
-und alle anderen sehen die neue Fassung.
+den manuellen Weg geht (exportieren, Datei hochladen, Seite neu laden), sieht
+im eigenen Browser weiter den alten Stand – die Datei auf dem Server ist
+trotzdem korrekt, und alle anderen sehen die neue Fassung. (Beim Knopf
+VERÖFFENTLICHEN kümmert sich das CMS selbst darum.)
 
 Das CMS weist beim Öffnen darauf hin, sobald es eine Abweichung bemerkt. Der
 Knopf **LOKALE ÄNDERUNGEN VERWERFEN** oben im CMS räumt den Browserspeicher
@@ -186,13 +190,20 @@ Es ist kein Build-Schritt nötig, das Repo enthält einfach diesen Ordner.
    eigene Domain um, die drei Adressen im `<head>` von `index.html` anpassen
    (siehe [Link-Vorschau und Favicon](#link-vorschau-und-favicon)).
 
-**Redaktions-Workflow ab dann:**
+**Redaktions-Workflow ab dann – der normale Weg:**
 
-1. Seite im Browser öffnen, im CMS bearbeiten, **EXPORTIEREN** (wie bisher).
+1. **Live-Seite** im Browser öffnen (nicht eine alte lokale Kopie – sonst
+   arbeitet man auf veraltetem Stand), `admin` tippen, im CMS bearbeiten.
+2. **VERÖFFENTLICHEN** klicken. Fertig – die Änderung wird direkt ins Repo
+   geschrieben und ist nach ~1 Minute live. Beim allerersten Mal fragt das CMS
+   nach einem GitHub-Token, siehe [Veröffentlichen direkt aus dem CMS](#veröffentlichen-direkt-aus-dem-cms).
+
+**Der manuelle Weg** (Fallback, oder wenn jemand kein Token anlegen möchte):
+
+1. Im CMS bearbeiten, **EXPORTIEREN** → `index.html` wird heruntergeladen.
 2. Im GitHub-Repo die Datei `index.html` anklicken → Stift-/Upload-Symbol →
    neue Datei per Drag & Drop hochladen → **Commit changes**.
-3. Nach ~1 Minute ist die Änderung live. Kein FTP, keine Zugangsdaten außer
-   dem eigenen GitHub-Account.
+3. Nach ~1 Minute ist die Änderung live.
 
 Neue Bilder kommen auf demselben Weg in den passenden `images/`-Unterordner
 (im Repo: **Add file → Upload files**). Achtung: GitHub Pages unterscheidet
@@ -209,6 +220,82 @@ eingerichtet – kurze Nachfrage spart Doku-Lektüre.
 **Bonus:** Jeder Commit ist eine Sicherung. Über die History der `index.html`
 lässt sich jeder frühere Stand ansehen und wiederherstellen – das ersetzt das
 bisherige „Backup durch Kopien".
+
+## Veröffentlichen direkt aus dem CMS
+
+Der Knopf **🚀 VERÖFFENTLICHEN** im CMS schreibt die `index.html` über die
+GitHub-Schnittstelle direkt ins Repo – kein Download, kein Upload, kein
+GitHub Desktop. Der Commit läuft unter dem GitHub-Namen der Person, die
+geklickt hat, man sieht in der History also, wer was geändert hat.
+
+### Einmalige Einrichtung pro Person (2 Minuten)
+
+Jede:r Redakteur:in braucht ein persönliches **GitHub-Token**. Es wird einmal
+im CMS eingetragen (🔑-Knopf oder beim ersten Klick auf VERÖFFENTLICHEN) und
+bleibt **nur im eigenen Browser** gespeichert – es landet nie im Repo oder
+auf der Website.
+
+Voraussetzung: Die Person ist als **Collaborator** mit Schreibrecht im Repo
+eingetragen (Repo → Settings → Collaborators).
+
+1. Auf GitHub anmelden, dann
+   <https://github.com/settings/personal-access-tokens/new> öffnen.
+2. Token name: z.B. `DA Lab Website`. Expiration: 1 Jahr (danach einfach ein
+   neues anlegen – das CMS meldet sich, wenn das alte nicht mehr gilt).
+3. Repository access: **Only select repositories** → `dalab-website`.
+4. Permissions → Repository permissions → **Contents: Read and write**.
+   Sonst nichts.
+5. **Generate token**, den angezeigten Text kopieren (wird nur einmal gezeigt)
+   und im CMS einfügen.
+
+**Falls das Repo in Schritt 3 nicht auswählbar ist:** Fine-grained Tokens
+können nur Repos des *eigenen* Kontos oder einer *Organisation* ansprechen.
+Solange das Repo unter einem persönlichen Konto (`michaellankes/…`) liegt,
+können eingeladene Kolleg:innen es dort nicht auswählen. Zwei Auswege:
+
+- **Classic Token** verwenden: <https://github.com/settings/tokens/new>,
+  Scope **`public_repo`** anhaken (reicht, das Repo ist öffentlich), Ablauf
+  setzen, generieren. Funktioniert sofort, gilt aber für alle öffentlichen
+  Repos der Person – etwas weniger eng gefasst.
+- **Besser auf Dauer:** das Repo in eine GitHub-Organisation übertragen
+  (z.B. `Digital-Media` oder eine eigene Lab-Org, wie es das alte Lab mit
+  `DigitalMediaLab-AT` gemacht hat). Dann funktionieren Fine-grained Tokens
+  für alle Mitglieder. Beim Umzug muss **eine** Zeile in
+  `assets/js/app.js` angepasst werden – die Konstante `PUBLISH`
+  (`owner`, ggf. `repo`) – und die drei Adressen im `<head>`
+  (siehe [Link-Vorschau und Favicon](#link-vorschau-und-favicon)).
+
+### Sicherheit
+
+- Das Token ist ein Schlüssel zum Repo. **Nicht weitergeben, nicht auf
+  fremden oder geteilten Rechnern eintragen.** Auf einem geteilten Rechner
+  nach der Arbeit über 🔑 → TOKEN ENTFERNEN löschen.
+- Ablaufdatum setzen (1 Jahr). Ein verlorenes Token auf GitHub unter
+  Settings → Developer settings → Personal access tokens widerrufen.
+- Das Admin-Passwort des CMS bleibt, was es war: ein Sichtschutz. Die echte
+  Zugangskontrolle ist jetzt GitHub – wer kein Token hat, kann nichts
+  veröffentlichen, egal ob er das Passwort kennt.
+
+### Was beim Veröffentlichen passiert
+
+1. Das CMS holt den aktuellen Stand der `index.html` aus dem Repo.
+2. Es vergleicht drei Stände: *womit du angefangen hast*, *was du jetzt hast*
+   und *was im Repo liegt*. Nur **deine** Änderungen werden auf den Repo-Stand
+   übertragen – Einträge, die jemand anderes inzwischen geändert oder ergänzt
+   hat, bleiben erhalten. Zwei Leute können also gleichzeitig an
+   verschiedenen Dingen arbeiten.
+3. Hat jemand anderes **denselben Eintrag** geändert wie du, wird **nichts**
+   veröffentlicht und das CMS sagt dir, welcher Eintrag betroffen ist. Dann:
+   EXPORTIEREN (Sicherung), *Lokale Änderungen verwerfen*, den Eintrag noch
+   einmal bearbeiten, veröffentlichen.
+4. Die Datei im Repo ist dabei immer die Vorlage – auch Design- oder
+   Code-Änderungen, die jemand direkt im Repo gemacht hat, bleiben erhalten.
+   Der Knopf tauscht ausschließlich den Datenblock aus.
+
+Nach dem Veröffentlichen zeigt die Live-Seite die Änderung meist innerhalb
+einer Minute; GitHub kann die alte Fassung aber **bis zu 10 Minuten**
+zwischenspeichern. Das CMS weiß das und zeigt dir in der Zwischenzeit deinen
+veröffentlichten Stand, ohne eine falsche Warnung auszugeben.
 
 ## Adressen der Detailansichten
 
