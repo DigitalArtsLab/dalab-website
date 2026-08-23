@@ -441,12 +441,10 @@
     }
 
     function renderTeam() {
-        // 4 columns by default. When that would leave a single person alone in
-        // the last row (5, 9, 13 ...), switch to 3 columns so the grid closes.
-        const n = allData.team.length;
+        // Four per row; an incomplete last row is centred (see .team-grid in
+        // the stylesheet), so the portrait size stays the same for any team size.
         const grid = $('dynamic-team-grid');
-        const threeCols = n > 4 && n % 4 === 1 && n % 3 !== 1;
-        grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-8 ' + (threeCols ? 'lg:grid-cols-3' : 'md:grid-cols-4');
+        grid.className = 'team-grid';
         grid.innerHTML = allData.team.map(t => `
             <div data-open="team" data-id="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} - open profile" class="group border border-[#d1d1d1] bg-white overflow-hidden flex flex-col interactive cursor-pointer text-center hover:border-accent hover:shadow-lg transition-all duration-300">
                 <div class="w-1/2 mx-auto mt-8 aspect-square bg-[#e5e5e5] flex items-center justify-center relative overflow-hidden rounded-full border-2 border-transparent group-hover:border-accent transition-colors">
@@ -929,7 +927,7 @@
         if (heroImg) heroImg.setAttribute('src', HERO_DEFAULT_SRC); // re-set from data on load
         // renderTeam picks the column count per team size - keep the file stable.
         const teamGrid = clone.querySelector('#dynamic-team-grid');
-        if (teamGrid) teamGrid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8';
+        if (teamGrid) teamGrid.className = 'team-grid';
         const heroPrev = clone.querySelector('#admin-hero-preview');
         if (heroPrev) heroPrev.setAttribute('src', HERO_DEFAULT_SRC);
         // Admin panel always reopens on the news tab - don't bake a tab state in.

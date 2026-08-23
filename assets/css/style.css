@@ -75,3 +75,12 @@
     .modal { transition: none; }
     .hero-gradient { animation: none; }
 }
+
+/* ---------- Team grid ----------
+   Four per row, but an incomplete last row is centred instead of left-aligned
+   (9 people = 4 + 4 + 1 in the middle). Flexbox with fixed card widths does
+   what CSS grid cannot. Widths = (100% - gaps) / columns, gap 2rem. */
+.team-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
+.team-grid > * { width: 100%; }
+@media (min-width: 640px)  { .team-grid > * { width: calc(50% - 1rem); } }
+@media (min-width: 768px)  { .team-grid > * { width: calc(25% - 1.5rem); } }

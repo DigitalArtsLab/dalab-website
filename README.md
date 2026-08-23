@@ -396,7 +396,7 @@ npx tailwindcss -c tailwind.config.js -i input.css -o assets/css/style.css --min
 
 Beide Build-Dateien (`tailwind.config.js`, `input.css`) liegen mit im Ordner.
 
-Die eigenen Styles am Ende von `input.css` (Cursor, Modals, Admin-UI, mobile
+Die eigenen Styles am Ende von `input.css` (Cursor, Modals, Admin-UI, Team-Raster, mobile
 Navigation) sind normales CSS und werden von Tailwind unverändert
 durchgereicht – sie stehen deshalb identisch am Ende von
 `assets/css/style.css`. Wer dort etwas ändert, muss es in **beiden** Dateien
