@@ -1131,6 +1131,57 @@
 
     let publishing = false;
 
+    // ---------- Uploaded images -> files in the repo ----------
+    // The CMS upload button embeds images as data URLs. Publishing turns each
+    // of them into a real file under images/<section>/ (one commit per image)
+    // and leaves only the path in the data - so index.html stays small and the
+    // browser can cache the pictures. A failed publish later on does not redo
+    // this: the path is persisted as soon as the file is in the repo.
+    const MIME_EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+    const fileSafe = s => String(s || '').replace(/^id_/, '').replace(/[^a-z0-9-]/gi, '');
+
+    function embeddedImages() {
+        const out = [];
+        if (allData.heroImage && allData.heroImage.indexOf('data:') === 0) {
+            out.push({ label: 'Hero-Logo', folder: 'hero', name: 'hero-' + Date.now(),
+                get: () => allData.heroImage, set: v => { allData.heroImage = v; } });
+        }
+        ['news', 'projects', 'team'].forEach(list => (allData[list] || []).forEach(item => {
+            if (!item.imageUrl || item.imageUrl.indexOf('data:') !== 0) return;
+            const base = slugify(item.title || item.name) || 'image';
+            out.push({ label: item.title || item.name || item.id, folder: list, name: base + '-' + (fileSafe(item.id) || Date.now()),
+                get: () => item.imageUrl, set: v => { item.imageUrl = v; } });
+        }));
+        return out;
+    }
+
+    async function uploadEmbeddedImages(token, onProgress) {
+        const imgs = embeddedImages();
+        for (let i = 0; i < imgs.length; i++) {
+            const im = imgs[i];
+            onProgress(i + 1, imgs.length);
+            const m = /^data:([^;,]+)[^,]*,(.*)$/.exec(im.get());
+            if (!m) continue;
+            const path = 'images/' + im.folder + '/' + im.name + '.' + (MIME_EXT[m[1]] || 'jpg');
+            const url = 'https://api.github.com/repos/' + PUBLISH.owner + '/' + PUBLISH.repo + '/contents/' + path;
+            const headers = { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
+            const res = await fetch(url, {
+                method: 'PUT', headers,
+                body: JSON.stringify({ message: 'CMS: Bild ' + path, content: m[2], branch: PUBLISH.branch })
+            });
+            if (!res.ok) {
+                // 422 without sha usually means the file is already there
+                // (an earlier attempt got this far) - then it is fine to use it.
+                const exists = res.status === 422 && (await fetch(url + '?ref=' + encodeURIComponent(PUBLISH.branch), { headers, cache: 'no-store' })).ok;
+                if (!exists) throw Object.assign(new Error('Bild-Upload fehlgeschlagen: ' + path + ' (' + res.status + ')'), { status: res.status });
+            }
+            im.set(path);
+            persist();
+        }
+        if (imgs.length) { initApp(); if (currentTab === 'hero') refreshHeroPreview(); }
+        return imgs.length;
+    }
+
     async function publish() {
         if (publishing) return;
         const token = getToken();
@@ -1143,6 +1194,8 @@
         const done = () => { publishing = false; btn.disabled = false; btn.textContent = '\u{1F680} VERÖFFENTLICHEN'; };
 
         try {
+            const uploaded = await uploadEmbeddedImages(token, (i, n) => { btn.textContent = '⏳ BILD ' + i + '/' + n + ' …'; });
+            btn.textContent = '⏳ VERÖFFENTLICHE …';
             const remote = await fetchRemote(token);
             const baseJson = localStorage.getItem(BASE_KEY) || fileJson;
             const { merged, conflicts, summary, notes } = mergeData(JSON.parse(baseJson), allData, remote.data);
@@ -1152,7 +1205,8 @@
                     'Seit du angefangen hast, hat jemand anderes dieselben Eintr&auml;ge ge&auml;ndert:<br><br>' +
                     conflicts.map(c => '&bull; ' + esc(c)).join('<br>') +
                     '<br><br>Vorgehen: EXPORTIEREN als Sicherung, dann &bdquo;Lokale &Auml;nderungen verwerfen&ldquo;, ' +
-                    'die Eintr&auml;ge neu bearbeiten und erneut ver&ouml;ffentlichen.',
+                    'die Eintr&auml;ge neu bearbeiten und erneut ver&ouml;ffentlichen.' +
+                    (uploaded ? '<br><br>(' + uploaded + ' hochgeladene Bilddatei(en) liegen bereits im Repo und k&ouml;nnen per Pfad weiterverwendet werden.)' : ''),
                     'bg-red-800');
                 return;
             }
@@ -1204,6 +1258,7 @@
 
             const commitUrl = result.commit && result.commit.html_url;
             toast('&#9989; VER&Ouml;FFENTLICHT!',
+                (uploaded ? uploaded + (uploaded === 1 ? ' Bild wurde' : ' Bilder wurden') + ' als Datei ins Repo geladen. ' : '') +
                 'Die &Auml;nderungen sind im Repo. Die Live-Seite zeigt sie nach etwa einer Minute' +
                 ' (GitHub kann die alte Fassung bis zu 10 Minuten zwischenspeichern &ndash; einfach sp&auml;ter neu laden).' +
                 (notes.length ? '<br><br>' + notes.map(esc).join('<br>') : '') +

@@ -84,32 +84,40 @@ Vorher exportieren, sonst sind ungesicherte Änderungen weg.
 
 ## Bilder
 
-Empfohlener Weg: Bild in den passenden Unterordner von `images/` legen (z.B.
-`images/team/maxi.jpg`) und im Admin-Formular den Pfad eintragen
-(`images/team/maxi.jpg`). So bleibt die HTML-Datei klein.
+**Der normale Weg:** Im Bearbeiten-Formular den **Upload-Button** nutzen. Das
+Bild wird im Browser verkleinert (max. 800 px) und ist sofort in der Vorschau.
+Beim **VERÖFFENTLICHEN** legt das CMS es als Datei im Repo ab – unter
+`images/news/`, `images/projects/` bzw. `images/team/`, Dateiname aus Titel
+und ID (z.B. `images/projects/ludaviz-1787476490936.jpg`) – und trägt im
+Eintrag nur noch den Pfad ein. Jedes Bild ist ein eigener kleiner Commit
+(„CMS: Bild images/…“). Groß-/Kleinschreibung kann dabei nicht mehr
+schiefgehen, weil das CMS den Namen selbst vergibt.
 
-Alternativ gibt es den Upload-Button – dabei wird das Bild verkleinert und
-direkt in die Datei eingebettet (praktisch für schnelle Tests, macht die Datei
-aber größer).
+Bis zum Veröffentlichen steckt ein hochgeladenes Bild als Text in den lokalen
+Daten (und in einem eventuellen Export). Das ist nur ein Zwischenzustand –
+nach dem Veröffentlichen ist die `index.html` wieder klein.
 
-Aktuell verweisen **alle** Bilder auf Pfade, es ist kein einziges Bild in die
-HTML eingebettet. Bitte so lassen: dadurch ist `index.html` rund 30 KB statt
-790 KB, die Bilder werden vom Browser zwischengespeichert und erst geladen,
-wenn sie sichtbar werden. Ob sich versehentlich wieder ein eingebettetes Bild
-eingeschlichen hat, verrät:
+**Der manuelle Weg** (für Bilder, die schon im Repo liegen, oder wenn jemand
+sie selbst einsortieren will): Bild in den passenden `images/`-Unterordner
+legen und im Formular den Pfad eintragen (`images/team/maxi.jpg`). Achtung:
+GitHub Pages unterscheidet Groß- und Kleinschreibung – der Pfad muss der Datei
+**exakt** entsprechen, am Windows-Rechner fällt ein Fehler nicht auf.
+
+Ob sich versehentlich ein eingebettetes Bild in der veröffentlichten Datei
+hält, verrät:
 
 ```bash
 grep -c base64 index.html
 ```
 
 Ein gesetztes Bild wird über **✕ BILD ENTFERNEN** im Bearbeiten-Formular wieder
-losgeworden.
+losgeworden (die Datei bleibt im Repo – löschen bei Bedarf dort).
 
 Das Hero-Logo hat im CMS einen eigenen Bereich (links: **HERO LOGO**) mit
-Vorschau, Upload und „Standard-Logo wiederherstellen“. Sauberer als der Upload
-ist es, `images/hero/DAlabLogo.png` im Repo direkt zu ersetzen und danach
-`make-images.ps1` laufen zu lassen, damit Vorschaubild und Favicons zum neuen
-Logo passen.
+Vorschau, Upload und „Standard-Logo wiederherstellen“. Ein hochgeladenes Logo
+landet beim Veröffentlichen unter `images/hero/`. Danach `make-images.ps1`
+laufen lassen (bzw. `images/hero/DAlabLogo.png` ersetzen), damit Vorschaubild
+und Favicons zum neuen Logo passen.
 
 ## Vor dem Live-Gang
 
@@ -343,6 +351,10 @@ Die Seite setzt nichts, sammelt nichts und führt keinen fremden Code aus.
 
 ### Was beim Veröffentlichen passiert
 
+0. Hochgeladene Bilder werden zuerst als Dateien ins Repo geschrieben (ein
+   Commit pro Bild) und im Eintrag durch ihren Pfad ersetzt – siehe
+   [Bilder](#bilder). Schlägt das fehl, passiert nichts Weiteres und das Bild
+   bleibt lokal erhalten.
 1. Das CMS holt den aktuellen Stand der `index.html` aus dem Repo.
 2. Es vergleicht drei Stände: *womit du angefangen hast*, *was du jetzt hast*
    und *was im Repo liegt*. Nur **deine** Änderungen werden auf den Repo-Stand
