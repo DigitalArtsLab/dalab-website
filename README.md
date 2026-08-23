@@ -83,9 +83,11 @@ Checkliste dessen, was noch echte Inhalte braucht. Alles davon ist über das
 CMS pflegbar, nichts davon erfordert Code.
 
 **Rechtstexte** – siehe [Impressum, Datenschutz, Kontakt](#impressum-datenschutz-kontakt).
-16 Felder sind mit `[ZU ERGÄNZEN]` markiert.
+15 Felder sind mit `[ZU ERGÄNZEN]` markiert.
 
-**Domain** – im `<head>` `canonical` und `og:url` einkommentieren, siehe
+**Eigene Domain** (falls gewünscht) – siehe
+[Veröffentlichen über GitHub Pages](#veröffentlichen-über-github-pages);
+anschließend die drei Adressen im `<head>` umstellen, siehe
 [Link-Vorschau und Favicon](#link-vorschau-und-favicon).
 
 **Platzhalter-Inhalte, die aktuell öffentlich sichtbar sind:**
@@ -130,9 +132,10 @@ Beim Teilen der Adresse (Slack, LinkedIn, Mastodon, WhatsApp …) zeigen die
 Dienste Titel, Beschreibung und `images/og-image.png`. Titel und Beschreibung
 stehen als `<meta>`-Tags im `<head>` von `index.html`.
 
-**Eine Sache fehlt noch:** Sobald die endgültige Domain feststeht, im `<head>`
-den auskommentierten Block suchen und die beiden Zeilen mit `canonical` und
-`og:url` einkommentieren – manche Dienste lösen relative Bildpfade nicht auf.
+Die Adressen `canonical`, `og:url` und `og:image` im `<head>` zeigen aktuell auf
+`https://michaellankes.github.io/dalab-website/`. **Bei einem Umzug auf eine
+eigene Domain müssen diese drei Zeilen auf die neue Adresse umgestellt werden** –
+sonst zeigen Link-Vorschauen weiter auf die alte github.io-Adresse.
 
 Vorschaubild und Favicons sind aus dem Logo generiert. Wenn das Logo
 ausgetauscht wird (`images/hero/DAlabLogo.png`), einmal neu erzeugen:
@@ -178,9 +181,10 @@ Es ist kein Build-Schritt nötig, das Repo enthält einfach diesen Ordner.
    `https://<org>.github.io/dalab-website/` erreichbar (HTTPS automatisch).
 3. Kolleg:innen, die Inhalte pflegen sollen, unter Settings → Collaborators
    einladen.
-4. Sobald die Adresse feststeht (github.io oder eigene Domain): im `<head>`
-   von `index.html` die auskommentierten Zeilen `canonical` und `og:url`
-   einkommentieren und die Adresse eintragen.
+4. Die Seite läuft aktuell unter `https://michaellankes.github.io/dalab-website/`
+   (Repo `michaellankes/dalab-website`). Zieht sie in eine Org oder auf eine
+   eigene Domain um, die drei Adressen im `<head>` von `index.html` anpassen
+   (siehe [Link-Vorschau und Favicon](#link-vorschau-und-favicon)).
 
 **Redaktions-Workflow ab dann:**
 
