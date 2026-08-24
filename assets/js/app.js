@@ -1193,16 +1193,21 @@
             const path = 'images/' + im.folder + '/' + im.name + '.' + (MIME_EXT[m[1]] || 'jpg');
             const url = 'https://api.github.com/repos/' + PUBLISH.owner + '/' + PUBLISH.repo + '/contents/' + path;
             const headers = { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
-            const res = await fetch(url, {
-                method: 'PUT', headers,
-                body: JSON.stringify({ message: 'CMS: Bild ' + path, content: m[2], branch: PUBLISH.branch })
-            });
-            if (!res.ok) {
-                // 422 without sha usually means the file is already there
-                // (an earlier attempt got this far) - then it is fine to use it.
-                const exists = res.status === 422 && (await fetch(url + '?ref=' + encodeURIComponent(PUBLISH.branch), { headers, cache: 'no-store' })).ok;
-                if (!exists) throw Object.assign(new Error('Bild-Upload fehlgeschlagen: ' + path + ' (' + res.status + ')'), { status: res.status });
+            const body = { message: 'CMS: Bild ' + path, content: m[2], branch: PUBLISH.branch };
+            let res = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+            if (res.status === 422) {
+                // 422 without sha means a file with this name already exists -
+                // either from an earlier publish attempt or because the image
+                // of this entry is being REPLACED (the name is derived from the
+                // entry, so it stays the same). Overwrite it: fetch its sha and
+                // put again. Same content is harmless, new content is the fix.
+                const head = await fetch(url + '?ref=' + encodeURIComponent(PUBLISH.branch), { headers, cache: 'no-store' });
+                if (head.ok) {
+                    body.sha = (await head.json()).sha;
+                    res = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+                }
             }
+            if (!res.ok) throw Object.assign(new Error('Bild-Upload fehlgeschlagen: ' + path + ' (' + res.status + ')'), { status: res.status });
             im.set(path);
             persist();
         }

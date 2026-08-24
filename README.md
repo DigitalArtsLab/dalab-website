@@ -113,6 +113,26 @@ grep -c base64 index.html
 Ein gesetztes Bild wird über **✕ BILD ENTFERNEN** im Bearbeiten-Formular wieder
 losgeworden (die Datei bleibt im Repo – löschen bei Bedarf dort).
 
+### Bild austauschen
+
+Ein vorhandenes Bild zu ersetzen ist **ein** Durchgang – vorheriges Löschen
+ist nicht nötig:
+
+1. Eintrag im CMS öffnen, über den **Upload-Button** das neue Bild wählen
+   (die Vorschau zeigt es sofort)
+2. **SAVE**
+3. **VERÖFFENTLICHEN**
+
+Das CMS überschreibt beim Veröffentlichen die bestehende Bilddatei im Repo
+(der Dateiname bleibt gleich, weil er aus dem Eintrag abgeleitet wird).
+Ein „Pull“ in GitHub Desktop ist für die Website **nicht** nötig – die
+Veröffentlichung geht direkt zu GitHub. Pull braucht es nur, bevor jemand
+lokal am Repo-Ordner weiterarbeitet.
+
+Hinweis für ganz frühe Bilder (vor diesem Fix, August 2026): damals musste
+man die Datei auf GitHub von Hand löschen, bevor ein Ersatz ankam. Das ist
+behoben – der alte Umweg ist nicht mehr nötig.
+
 ### Bildgröße: ein Bild reicht – aber groß genug
 
 Es braucht **keine** zwei Versionen (klein/groß) pro Eintrag: Browser
