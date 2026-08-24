@@ -318,7 +318,7 @@
     const toggleNav = () => setNav($('nav-toggle').getAttribute('aria-expanded') !== 'true');
 
     // ---------- Image compression (shared by hero logo + item images) ----------
-    function compressImage(file, { maxDim = 800, type = 'image/jpeg', quality = 0.7 } = {}) {
+    function compressImage(file, { maxDim = 1600, type = 'image/jpeg', quality = 0.82 } = {}) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onerror = reject;
@@ -1437,7 +1437,7 @@
         e.target.value = '';
         if (!file) return;
         try {
-            const dataUrl = await compressImage(file, { type: 'image/png' });
+            const dataUrl = await compressImage(file, { type: 'image/png', maxDim: 800 }); // Logo rendert max. 260px breit
             allData.heroImage = dataUrl;
             $('main-hero-img').src = dataUrl;
             refreshHeroPreview();
@@ -1454,7 +1454,7 @@
         const file = e.target.files[0];
         if (!file) return;
         try {
-            currentUploadedImage = await compressImage(file); // JPEG, max 800px
+            currentUploadedImage = await compressImage(file); // JPEG, max 1600px - gross genug fuer die Detail-Ansicht auch auf Retina
             $('image-path-input').value = '';
             setPreview(currentUploadedImage);
         } catch (err) {

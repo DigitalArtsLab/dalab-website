@@ -85,7 +85,7 @@ Vorher exportieren, sonst sind ungesicherte Änderungen weg.
 ## Bilder
 
 **Der normale Weg:** Im Bearbeiten-Formular den **Upload-Button** nutzen. Das
-Bild wird im Browser verkleinert (max. 800 px) und ist sofort in der Vorschau.
+Bild wird im Browser verkleinert (max. 1600 px) und ist sofort in der Vorschau.
 Beim **VERÖFFENTLICHEN** legt das CMS es als Datei im Repo ab – unter
 `images/news/`, `images/projects/` bzw. `images/team/`, Dateiname aus Titel
 und ID (z.B. `images/projects/ludaviz-1787476490936.jpg`) – und trägt im
@@ -113,6 +113,22 @@ grep -c base64 index.html
 Ein gesetztes Bild wird über **✕ BILD ENTFERNEN** im Bearbeiten-Formular wieder
 losgeworden (die Datei bleibt im Repo – löschen bei Bedarf dort).
 
+### Bildgröße: ein Bild reicht – aber groß genug
+
+Es braucht **keine** zwei Versionen (klein/groß) pro Eintrag: Browser
+skalieren verlustfrei herunter, und die Karten laden verzögert. Entscheidend
+ist die größte Darstellungsfläche – die Detail-Ansicht (bis ~1200px breit,
+auf Retina-Displays effektiv das Doppelte). Faustregel für Originale:
+
+- **News-/Projektbilder: ca. 1600–2000px Breite** (JPEG oder WebP)
+- **Team-Porträts: ca. 1000–1400px** Kantenlänge
+- **Hero-Logo: ~500–800px** reichen (wird max. 260px breit angezeigt)
+
+Der Upload-Button verkleinert seit August 2026 auf max. 1600px – **vorher lag
+das Limit bei 800px**. Damals hochgeladene Bilder wirken in der Detail-Ansicht
+unscharf und sollten einmal neu vom Original hochgeladen werden. Zu kleine
+Originale kann keine Technik retten: Was mit 200px ankommt, bleibt unscharf.
+
 Das Hero-Logo hat im CMS einen eigenen Bereich (links: **HERO LOGO**) mit
 Vorschau, Upload und „Standard-Logo wiederherstellen“. Ein hochgeladenes Logo
 landet beim Veröffentlichen unter `images/hero/`. Danach `make-images.ps1`
@@ -138,6 +154,7 @@ anschließend die drei Adressen im `<head>` umstellen, siehe
 | --- | --- |
 | Projekte | „Thermal VR“ hat noch kein Bild (`imageUrl` leer – Bild in `images/projects/` legen und Pfad im CMS eintragen) |
 | Projekte | „Theaterautomat“ hat noch keinen Link (Video oder Landestheater-Seite im CMS nachtragen, sobald es eine Adresse gibt) |
+| Bilder | Zu klein für die Detail-Ansicht, bitte in größer neu hochladen: `projects/ludaviz-proj0.jpg` (800px, altes Upload-Limit), Team-Porträts von Luca (160px), Florian (200px), Lisa (200px), Lukas (388px); grenzwertig: `projects/Theaterautoemt.jpg` (1200px) |
 | Team | 8 von 10 Personen ohne E-Mail und ohne Biografie; Jürgen Haglers Bio ist noch der Platzhalter „Bio“ |
 | Team | Noch niemand hat einen Pure- oder Google-Scholar-Link hinterlegt (neue, optionale Felder im Personen-Formular) |
 
