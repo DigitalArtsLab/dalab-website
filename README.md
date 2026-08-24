@@ -136,14 +136,14 @@ anschließend die drei Adressen im `<head>` umstellen, siehe
 
 | Bereich | Was noch drinsteht |
 | --- | --- |
-| News | Eintrag „Test 1“ (2025), ohne Beschreibung und Text |
-| Publikationen | Eintrag „Test“ (2024), Autoren „A. B., C. D.“ |
 | Projekte | „Broach AI“ und „Theaterautomat“: Status, Team, Partner und beide Beschreibungen leer |
 | Projekte | „LudaViz“ nennt als Team „Prof. Dr. X. Y.“, „Expanded“ nennt „Team Member 2“ |
-| Team | 7 von 9 Personen ohne E-Mail und ohne Biografie |
+| Team | 8 von 10 Personen ohne E-Mail und ohne Biografie; Jürgen Haglers Bio ist noch der Platzhalter „Bio“ |
 | Team | Noch niemand hat einen Pure- oder Google-Scholar-Link hinterlegt (neue, optionale Felder im Personen-Formular) |
-| Team | Michi und Juergen haben Dummy-Adressen (`x.y@fh-ooe.at`, `tm1@fh-ooe.at`) und „Bio.“ als Text |
-| Team | Alle Namen sind Kurzformen – für eine Forschungsgruppe nach außen vermutlich eher vollständige Namen mit Titel |
+
+Erledigt: News-Platzhalter ersetzt, Team auf vollständige Namen umgestellt,
+Publikationsliste 2021–2026 eingepflegt (39 Einträge, DOIs gegen Crossref
+verifiziert; einzig „Morigami“, MuC-Workshopband 2024, hat keinen DOI).
 
 **Zu klären:** Das Projekt heißt im CMS „Broach AI“, die Bilddatei
 `images/projects/BroschAI.png`. Eine der beiden Schreibweisen ist falsch.
