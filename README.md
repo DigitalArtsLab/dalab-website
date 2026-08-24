@@ -136,17 +136,19 @@ anschließend die drei Adressen im `<head>` umstellen, siehe
 
 | Bereich | Was noch drinsteht |
 | --- | --- |
-| Projekte | „Broach AI“ und „Theaterautomat“: Status, Team, Partner und beide Beschreibungen leer |
-| Projekte | „LudaViz“ nennt als Team „Prof. Dr. X. Y.“, „Expanded“ nennt „Team Member 2“ |
+| Projekte | „Thermal VR“ hat noch kein Bild (`imageUrl` leer – Bild in `images/projects/` legen und Pfad im CMS eintragen) |
+| Projekte | „Theaterautomat“ hat noch keinen Link (Video oder Landestheater-Seite im CMS nachtragen, sobald es eine Adresse gibt) |
 | Team | 8 von 10 Personen ohne E-Mail und ohne Biografie; Jürgen Haglers Bio ist noch der Platzhalter „Bio“ |
 | Team | Noch niemand hat einen Pure- oder Google-Scholar-Link hinterlegt (neue, optionale Felder im Personen-Formular) |
 
 Erledigt: News-Platzhalter ersetzt, Team auf vollständige Namen umgestellt,
 Publikationsliste 2021–2026 eingepflegt (39 Einträge, DOIs gegen Crossref
 verifiziert; einzig „Morigami“, MuC-Workshopband 2024, hat keinen DOI).
-
-**Zu klären:** Das Projekt heißt im CMS „Broach AI“, die Bilddatei
-`images/projects/BroschAI.png`. Eine der beiden Schreibweisen ist falsch.
+Alle fünf Projekte (LudaViz, Expanded Conference Series, Thermal VR,
+Brosch AI – Distorted Dreams, Theaterautomat) sind mit Beschreibung, Team,
+Partnern und Status eingepflegt (Schreibweise „Brosch AI“ über die
+Anima-Plus-Projektseite bestätigt; FWF-Grants gegen den FWF Research Radar
+geprüft).
 
 ## Impressum, Datenschutz, Kontakt
 
