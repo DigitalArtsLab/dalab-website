@@ -25,24 +25,6 @@ h1, h2, h3, h4, .font-din { text-transform: uppercase; }
 .hairline-b { border-bottom: 1px solid #d1d1d1; }
 .hairline-t { border-top: 1px solid #d1d1d1; }
 
-/* Custom cursor: only on devices with a real pointer (enabled via JS) */
-#cursor, #cursor-follower { display: none; }
-body.has-custom-cursor { cursor: none; }
-body.has-custom-cursor #cursor,
-body.has-custom-cursor #cursor-follower { display: block; }
-#cursor {
-    position: fixed; width: 8px; height: 8px; background-color: var(--main);
-    border-radius: 50%; pointer-events: none; z-index: 99999;
-    transform: translate(-50%, -50%); transition: background-color 0.2s, transform 0.2s;
-}
-#cursor-follower {
-    position: fixed; width: 36px; height: 36px; border: 1px solid var(--main);
-    border-radius: 50%; pointer-events: none; z-index: 99998;
-    transform: translate(-50%, -50%); transition: border-color 0.15s ease-out, transform 0.15s ease-out;
-}
-#cursor.cursor-hover { background-color: var(--accent); transform: translate(-50%, -50%) scale(1.5); }
-#cursor-follower.cursor-hover { border-color: var(--accent); transform: translate(-50%, -50%) scale(1.2); }
-
 /* Modal transitions */
 .modal-open { overflow: hidden; }
 .modal { opacity: 0; pointer-events: none; transition: opacity 0.4s ease, transform 0.4s ease; transform: translateY(20px); visibility: hidden; }

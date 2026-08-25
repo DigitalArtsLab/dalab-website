@@ -1,36 +1,4 @@
-/* DA Lab - visual effects: custom cursor + hero particle animation */
-
-/* Custom cursor: only active on mouse devices, skipped on touch */
-(() => {
-    if (!window.matchMedia('(pointer: fine) and (hover: hover)').matches) return;
-    document.body.classList.add('has-custom-cursor');
-
-    const cursor = document.getElementById('cursor');
-    const follower = document.getElementById('cursor-follower');
-    let mouseX = innerWidth / 2, mouseY = innerHeight / 2;
-    let followerX = mouseX, followerY = mouseY;
-
-    document.addEventListener('mousemove', e => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
-    });
-
-    document.addEventListener('mouseover', e => {
-        const hovering = !!e.target.closest('.interactive');
-        cursor.classList.toggle('cursor-hover', hovering);
-        follower.classList.toggle('cursor-hover', hovering);
-    });
-
-    (function animate() {
-        followerX += (mouseX - followerX) * 0.15;
-        followerY += (mouseY - followerY) * 0.15;
-        follower.style.left = followerX + 'px';
-        follower.style.top = followerY + 'px';
-        requestAnimationFrame(animate);
-    })();
-})();
+/* DA Lab - visual effects: hero particle animation */
 
 /* Background particle phase-transition animation */
 (() => {

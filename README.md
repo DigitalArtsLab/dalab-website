@@ -21,8 +21,9 @@ verstecktes CMS auf der Seite selbst – und mit einem Klick veröffentlicht.
 2. Das Wort **`admin` tippen** (einfach auf der Seite, nicht in ein
    Eingabefeld). Das geht nur mit Tastatur – Inhalte pflegt man am Computer,
    nicht am Handy.
-3. Passwort eingeben (Standard: `dalab2026` – bitte ändern, siehe
-   [Admin-Passwort ändern](#admin-passwort-ändern)).
+3. Passwort eingeben. Es steht bewusst nicht in diesem README – das Repo ist
+   öffentlich. Neue Redakteur:innen bekommen es persönlich; zum Ändern siehe
+   [Admin-Passwort ändern](#admin-passwort-ändern).
 4. Inhalte bearbeiten und **🚀 VERÖFFENTLICHEN** klicken. Die Änderung geht
    direkt ins Repo und ist nach ~1 Minute online. Beim allerersten Mal fragt
    das CMS nach einem GitHub-Token –
@@ -305,7 +306,7 @@ dalab-website/
 │   ├── fonts/          ← Barlow + Inter, selbst gehostet (DSGVO-freundlich)
 │   └── js/
 │       ├── app.js      ← Seiten-Logik, Admin-CMS, Veröffentlichen
-│       └── effects.js  ← Cursor + Partikel-Animation
+│       └── effects.js  ← Partikel-Animation im Hero
 └── images/
     ├── hero/           ← Logo im Hero
     ├── og-image.png    ← Vorschaubild beim Teilen von Links (generiert)
@@ -373,10 +374,15 @@ Den ausgegebenen Hash bei `ADMIN_HASH` einsetzen.
 **Ehrlich gesagt:** Dieser Passwortschutz ist ein Sichtschutz, keine echte
 Sicherheit – der Check ist im Quellcode umgehbar. Das ist unkritisch, weil
 das Admin-Menü nur die lokale Ansicht ändert; **veröffentlichen kann nur,
-wer ein GitHub-Token mit Schreibrecht hat.** Zwei Regeln trotzdem: kein
-echtes Passwort wiederverwenden (der Hash steht öffentlich im Repo und ist
-bei kurzen Passwörtern knackbar – ein FH-Passwort hätte hier nichts
-verloren), und das Standardpasswort einmal ändern.
+wer ein GitHub-Token mit Schreibrecht hat.** Zwei Regeln trotzdem:
+
+- **Kein echtes Passwort wiederverwenden.** Der Hash steht öffentlich im
+  Repo und ist bei kurzen Passwörtern knackbar – ein FH-Passwort hätte hier
+  nichts verloren.
+- **Das Passwort nie in dieses README oder sonst ins Repo schreiben.** Das
+  Repo ist öffentlich, und auch Gelöschtes bleibt in der Git-History
+  auffindbar. Ein Passwort, das je hier stand, gilt als verbrannt und muss
+  gewechselt werden. Weitergabe an neue Redakteur:innen: persönlich.
 
 ### Barrierefreiheit
 
@@ -399,7 +405,7 @@ und `#mobile-nav`.
 ### Code-Änderungen und Browser-Cache
 
 `index.html` bindet Stylesheet und Scripts mit einer Versionsnummer ein
-(z.B. `assets/js/app.js?v=2026-08-24c`). **Wer `app.js`, `effects.js` oder
+(z.B. `assets/js/app.js?v=2026-08-24d`). **Wer `app.js`, `effects.js` oder
 `style.css` ändert, zählt die Version an allen drei Stellen in `index.html`
 hoch** (Datum + Buchstabe reicht) – sonst laden Browser bis zu 10 Minuten
 das alte Script zur neuen Seite. Inhaltspflege über das CMS braucht das

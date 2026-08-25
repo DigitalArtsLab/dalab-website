@@ -910,15 +910,14 @@
         // Remove JS-injected elements (archive modal, view-all buttons) - they
         // are recreated on load and must not be baked into the export.
         clone.querySelectorAll('.js-injected').forEach(el => el.remove());
-        // Strip live cursor state so exports work cleanly on touch devices too.
-        const body = clone.querySelector('body');
-        body.classList.remove('modal-open', 'has-custom-cursor');
+        clone.querySelector('body').classList.remove('modal-open');
         // An open mobile menu must not be baked into the export.
         clone.querySelector('#mobile-nav').classList.remove('open');
         clone.querySelector('#nav-toggle').setAttribute('aria-expanded', 'false');
+        // Left-overs from the removed custom cursor in previously exported pages.
         ['cursor', 'cursor-follower'].forEach(id => {
             const c = clone.querySelector('#' + id);
-            if (c) { c.removeAttribute('style'); c.classList.remove('cursor-hover'); }
+            if (c) c.remove();
         });
 
         // Strip rendered content - rebuilt from data on load; uploaded base64
