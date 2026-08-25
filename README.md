@@ -22,8 +22,7 @@ verstecktes CMS auf der Seite selbst – und mit einem Klick veröffentlicht.
    Eingabefeld). Das geht nur mit Tastatur – Inhalte pflegt man am Computer,
    nicht am Handy.
 3. Passwort eingeben. Es steht bewusst nicht in diesem README – das Repo ist
-   öffentlich. Neue Redakteur:innen bekommen es persönlich; zum Ändern siehe
-   [Admin-Passwort ändern](#admin-passwort-ändern).
+   öffentlich. Neue Redakteur:innen bekommen es persönlich.
 4. Inhalte bearbeiten und **🚀 VERÖFFENTLICHEN** klicken. Die Änderung geht
    direkt ins Repo und ist nach ~1 Minute online. Beim allerersten Mal fragt
    das CMS nach einem GitHub-Token –
@@ -357,32 +356,6 @@ Logo-Wechsel einmal neu erzeugen:
 ```bash
 powershell -ExecutionPolicy Bypass -File make-images.ps1
 ```
-
-### Admin-Passwort ändern
-
-Das Passwort steht als SHA-256-Hash in `assets/js/app.js` (Konstante
-`ADMIN_HASH`). Zum Ändern: Website öffnen, Entwicklerkonsole (F12), dann mit
-dem Wunsch-Passwort:
-
-```js
-crypto.subtle.digest('SHA-256', new TextEncoder().encode('NEUES-PASSWORT'))
-  .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('')))
-```
-
-Den ausgegebenen Hash bei `ADMIN_HASH` einsetzen.
-
-**Ehrlich gesagt:** Dieser Passwortschutz ist ein Sichtschutz, keine echte
-Sicherheit – der Check ist im Quellcode umgehbar. Das ist unkritisch, weil
-das Admin-Menü nur die lokale Ansicht ändert; **veröffentlichen kann nur,
-wer ein GitHub-Token mit Schreibrecht hat.** Zwei Regeln trotzdem:
-
-- **Kein echtes Passwort wiederverwenden.** Der Hash steht öffentlich im
-  Repo und ist bei kurzen Passwörtern knackbar – ein FH-Passwort hätte hier
-  nichts verloren.
-- **Das Passwort nie in dieses README oder sonst ins Repo schreiben.** Das
-  Repo ist öffentlich, und auch Gelöschtes bleibt in der Git-History
-  auffindbar. Ein Passwort, das je hier stand, gilt als verbrannt und muss
-  gewechselt werden. Weitergabe an neue Redakteur:innen: persönlich.
 
 ### Barrierefreiheit
 
