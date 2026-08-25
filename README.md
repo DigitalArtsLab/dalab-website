@@ -28,7 +28,7 @@ dalab-website/
 
 ## Inhalte pflegen
 
-1. Die **Live-Seite** (<https://michaellankes.github.io/dalab-website/>) im
+1. Die **Live-Seite** (<https://digitalartslab.github.io/dalab-website/>) im
    Browser öffnen. Der Admin-Zugang ist versteckt:
    **einfach das Wort `admin` tippen** (nicht in ein Eingabefeld, einfach auf
    der Seite). Das geht nur mit Tastatur – Inhalte pflegt man also am
@@ -228,7 +228,7 @@ Dienste Titel, Beschreibung und `images/og-image.png`. Titel und Beschreibung
 stehen als `<meta>`-Tags im `<head>` von `index.html`.
 
 Die Adressen `canonical`, `og:url` und `og:image` im `<head>` zeigen aktuell auf
-`https://michaellankes.github.io/dalab-website/`. **Bei einem Umzug auf eine
+`https://digitalartslab.github.io/dalab-website/`. **Bei einem Umzug auf eine
 eigene Domain müssen diese drei Zeilen auf die neue Adresse umgestellt werden** –
 sonst zeigen Link-Vorschauen weiter auf die alte github.io-Adresse.
 
@@ -276,8 +276,8 @@ Es ist kein Build-Schritt nötig, das Repo enthält einfach diesen Ordner.
    `https://<org>.github.io/dalab-website/` erreichbar (HTTPS automatisch).
 3. Kolleg:innen, die Inhalte pflegen sollen, unter Settings → Collaborators
    einladen.
-4. Die Seite läuft aktuell unter `https://michaellankes.github.io/dalab-website/`
-   (Repo `michaellankes/dalab-website`). Zieht sie in eine Org oder auf eine
+4. Die Seite läuft aktuell unter `https://digitalartslab.github.io/dalab-website/`
+   (Repo `DigitalArtsLab/dalab-website`). Zieht sie in eine Org oder auf eine
    eigene Domain um, die drei Adressen im `<head>` von `index.html` anpassen
    (siehe [Link-Vorschau und Favicon](#link-vorschau-und-favicon)).
 
@@ -326,35 +326,36 @@ im CMS eingetragen (links unter „Weitere“ → GITHUB-TOKEN, oder automatisch
 bleibt **nur im eigenen Browser** gespeichert – es landet nie im Repo oder
 auf der Website.
 
-Voraussetzung: Die Person ist als **Collaborator** mit Schreibrecht im Repo
+Voraussetzung: Die Person ist Mitglied der Organisation `DigitalArtsLab` mit
+Schreibrecht auf das Repo – oder als **Collaborator** direkt im Repo
 eingetragen (Repo → Settings → Collaborators).
 
 1. Auf GitHub anmelden, dann
    <https://github.com/settings/personal-access-tokens/new> öffnen.
-2. Token name: z.B. `DA Lab Website`. Expiration: 1 Jahr (danach einfach ein
+2. **Resource owner: `DigitalArtsLab` auswählen** (Dropdown oben im Formular,
+   nicht das eigene Konto) – nur dann ist das Lab-Repo in Schritt 4 wählbar.
+3. Token name: z.B. `DA Lab Website`. Expiration: 1 Jahr (danach einfach ein
    neues anlegen – das CMS meldet sich, wenn das alte nicht mehr gilt).
-3. Repository access: **Only select repositories** → `dalab-website`.
-4. Permissions → Repository permissions → **Contents: Read and write**.
+4. Repository access: **Only select repositories** → `dalab-website`.
+5. Permissions → Repository permissions → **Contents: Read and write**.
    Sonst nichts.
-5. **Generate token**, den angezeigten Text kopieren (wird nur einmal gezeigt)
+6. **Generate token**, den angezeigten Text kopieren (wird nur einmal gezeigt)
    und im CMS einfügen.
 
-**Falls das Repo in Schritt 3 nicht auswählbar ist:** Fine-grained Tokens
-können nur Repos des *eigenen* Kontos oder einer *Organisation* ansprechen.
-Solange das Repo unter einem persönlichen Konto (`michaellankes/…`) liegt,
-können eingeladene Kolleg:innen es dort nicht auswählen. Zwei Auswege:
+**Falls `DigitalArtsLab` in Schritt 2 nicht angeboten wird:** Die Organisation
+muss Fine-grained Tokens erlauben. Ein:e Org-Owner prüft unter Organisation →
+Settings → Third-party Access → **Personal access tokens**, dass Zugriff per
+Fine-grained Token zugelassen ist – und stellt am besten auf „ohne
+Genehmigungspflicht“, sonst muss jedes Token einzeln freigegeben werden.
+Übergangsweise funktioniert auch ein **Classic Token**
+(<https://github.com/settings/tokens/new>, Scope `public_repo`) – der gilt
+allerdings für alle öffentlichen Repos der Person.
 
-- **Classic Token** verwenden: <https://github.com/settings/tokens/new>,
-  Scope **`public_repo`** anhaken (reicht, das Repo ist öffentlich), Ablauf
-  setzen, generieren. Funktioniert sofort, gilt aber für alle öffentlichen
-  Repos der Person – etwas weniger eng gefasst.
-- **Besser auf Dauer:** das Repo in eine GitHub-Organisation übertragen
-  (z.B. `Digital-Media` oder eine eigene Lab-Org, wie es das alte Lab mit
-  `DigitalMediaLab-AT` gemacht hat). Dann funktionieren Fine-grained Tokens
-  für alle Mitglieder. Beim Umzug muss **eine** Zeile in
-  `assets/js/app.js` angepasst werden – die Konstante `PUBLISH`
-  (`owner`, ggf. `repo`) – und die drei Adressen im `<head>`
-  (siehe [Link-Vorschau und Favicon](#link-vorschau-und-favicon)).
+**Nach dem Umzug in die Organisation (August 2026):** Fine-grained Tokens,
+die noch für das alte Repo unter `michaellankes` angelegt wurden,
+funktionieren **nicht mehr** – bitte einmal neu anlegen wie oben, mit
+`DigitalArtsLab` als Resource owner. Classic Tokens laufen unverändert
+weiter. Das CMS meldet ein ungültiges Token beim nächsten VERÖFFENTLICHEN.
 
 ### Sicherheit
 

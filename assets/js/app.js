@@ -997,7 +997,7 @@
     // token the editor stores once in their own browser. The repo below must
     // match where the site lives - change it when the repo moves (e.g. into
     // an organisation).
-    const PUBLISH = { owner: 'michaellankes', repo: 'dalab-website', branch: 'main', path: 'index.html' };
+    const PUBLISH = { owner: 'DigitalArtsLab', repo: 'dalab-website', branch: 'main', path: 'index.html' };
     const TOKEN_KEY = 'dalab_github_token';
     const apiUrl = () => 'https://api.github.com/repos/' + PUBLISH.owner + '/' + PUBLISH.repo +
         '/contents/' + PUBLISH.path;
