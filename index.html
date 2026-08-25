@@ -30,7 +30,7 @@
     <link rel="apple-touch-icon" href="images/favicon-180.png">
     <meta name="theme-color" content="#094669">
 
-    <link rel="stylesheet" href="assets/css/style.css?v=2026-08-24d">
+    <link rel="stylesheet" href="assets/css/style.css?v=2026-08-25a">
 </head>
 <body class="selection:bg-accent selection:text-white relative">
 
@@ -75,6 +75,9 @@
             <h1 class="sr-only">DIGITAL ARTS RESEARCH GROUP</h1>
             <img id="main-hero-img" src="images/hero/DAlabLogo.png" alt="Digital Arts Research Group Logo" class="w-full max-w-[150px] md:max-w-[210px] lg:max-w-[260px] h-auto object-contain opacity-90 drop-shadow-2xl">
         </div>
+        <a href="#news" class="scroll-cue interactive" aria-label="Scroll down to content">
+            <span class="scroll-cue-chevron" aria-hidden="true"></span>
+        </a>
     </header>
 
     <!-- News -->
@@ -233,8 +236,8 @@
          card language), eyebrow label -> title -> short accent bar. -->
     <div id="news-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="nm-title">
         <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
-            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
+            <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2">
                 CLOSE ARTICLE <span aria-hidden="true">✕</span>
             </button>
         </div>
@@ -256,8 +259,8 @@
 
     <div id="project-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="pm-title">
         <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
-            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
+            <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
@@ -291,8 +294,8 @@
 
     <div id="team-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="tm-name">
         <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
-            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
+            <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2">
                 CLOSE PROFILE <span aria-hidden="true">✕</span>
             </button>
         </div>
@@ -331,10 +334,10 @@
     <div id="pubs-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="pubs-archive-title">
         <div class="sticky top-0 w-full flex flex-wrap justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
             <div class="flex flex-wrap items-center gap-6">
-                <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
+                <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
                 <div id="pubs-year-nav" class="flex flex-wrap gap-2" aria-label="Jump to year"></div>
             </div>
-            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2 ml-auto">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2 ml-auto">
                 CLOSE ARCHIVE <span aria-hidden="true">✕</span>
             </button>
         </div>
@@ -353,8 +356,8 @@
          a value; please have the whole block confirmed once before going live. -->
     <div id="imprint-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="imprint-title">
         <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
-            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
+            <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
@@ -403,8 +406,8 @@
          third-party embeds). Please have it confirmed before going live. -->
     <div id="privacy-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
         <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
-            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
+            <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
@@ -457,8 +460,8 @@
 
     <div id="contact-modal" class="modal fixed inset-0 z-[100] bg-bglight overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="contact-title">
         <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-            <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
-            <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">
+            <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
+            <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2">
                 CLOSE <span aria-hidden="true">✕</span>
             </button>
         </div>
@@ -1181,8 +1184,8 @@
 }
 </script>
 
-    <script src="assets/js/app.js?v=2026-08-24d"></script>
-    <script src="assets/js/effects.js?v=2026-08-24d"></script>
+    <script src="assets/js/app.js?v=2026-08-25a"></script>
+    <script src="assets/js/effects.js?v=2026-08-25a"></script>
 
 
 

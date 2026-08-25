@@ -137,3 +137,45 @@ h1, h2, h3, h4, .font-din { text-transform: uppercase; }
 
 /* Textareas in the admin form (replaces an inline style, which the CSP forbids) */
 .admin-textarea { height: 120px; resize: vertical; }
+
+/* ---------- Hero: nicht ganz bildschirmhoch ----------
+   Der naechste Abschnitt lugt unten hervor, damit klar ist, dass die Seite
+   weitergeht. Die id schlaegt die h-screen-Utility-Klasse. */
+#hero-area { height: 86vh; min-height: 520px; }
+
+/* Scroll-Hinweis am unteren Hero-Rand */
+.scroll-cue {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding: 0.9rem;
+}
+.scroll-cue-chevron {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid rgba(255, 255, 255, 0.85);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.85);
+    transform: rotate(45deg);
+    animation: cueBob 2s ease-in-out infinite;
+}
+.scroll-cue:hover .scroll-cue-chevron { border-color: #fff; }
+@keyframes cueBob {
+    0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.85; }
+    50% { transform: rotate(45deg) translate(4px, 4px); opacity: 0.4; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scroll-cue-chevron { animation: none; }
+}
+
+/* Gefuellter Button (CLOSE in den Overlays) - hover:bg-accent existiert nicht
+   im gebauten Tailwind, daher als eigene Klasse */
+.btn-solid {
+    background-color: var(--main);
+    color: #fff;
+    border: 1px solid var(--main);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.btn-solid:hover { background-color: var(--accent); border-color: var(--accent); }

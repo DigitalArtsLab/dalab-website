@@ -411,8 +411,8 @@
         div.setAttribute('aria-modal', 'true');
         div.innerHTML = `
             <div class="sticky top-0 w-full flex justify-between items-center p-6 z-10 bg-bglight/90 backdrop-blur-sm hairline-b gap-4">
-                <div class="font-din text-lg tracking-[0.15em] whitespace-nowrap" aria-hidden="true"><span class="font-bold text-main">DIGITAL ARTS</span> <span class="font-light text-accent">LAB</span></div>
-                <button data-action="close-modal" class="font-din text-sm tracking-widest border border-main px-6 py-2 hover:bg-main hover:text-white transition-colors interactive flex items-center gap-2">CLOSE <span aria-hidden="true">&#10005;</span></button>
+                <button data-action="close-modal" class="font-din text-sm tracking-widest text-main hover:text-accent transition-colors interactive flex items-center gap-2 whitespace-nowrap"><span aria-hidden="true">&#8592;</span> BACK</button>
+                <button data-action="close-modal" class="font-din text-sm tracking-widest btn-solid px-6 py-2 interactive flex items-center gap-2">CLOSE <span aria-hidden="true">&#10005;</span></button>
             </div>
             <div class="max-w-[1800px] mx-auto px-6 py-20">
                 <h2 class="text-4xl md:text-6xl font-din font-bold mb-16 text-main flex items-center gap-6">
