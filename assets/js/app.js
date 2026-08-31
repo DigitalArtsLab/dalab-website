@@ -58,9 +58,9 @@
             const storedJson = JSON.stringify(allData);
             usingStaleLocalCopy = storedJson !== fileJson && storedJson !== lastPublished;
 
-            // Resume checking if we are waiting for a publish to go live
+            // Resume checking if we are waiting for a change to go live
             if (lastPublished) {
-                startLiveDeploymentCheck();
+                setTimeout(checkDeployment, 500);
             }
         } else {
             allData = JSON.parse(fileJson);
@@ -84,13 +84,10 @@
     }
 
     // ---------- Deployment Polling & Banner ----------
-    function updateDeployBanner(status) {
+    function setDeployBanner(status) {
         let banner = document.getElementById('deploy-banner');
-        const nav = document.querySelector('nav');
-
         if (status === 'hidden') {
             if (banner) banner.remove();
-            if (nav) nav.style.top = '';
             document.body.style.paddingTop = '';
             return;
         }
@@ -98,94 +95,50 @@
         if (!banner) {
             banner = document.createElement('div');
             banner.id = 'deploy-banner';
-            // Fully bypass Tailwind CSS compiler with pure inline styles
-            banner.style.position = 'fixed';
-            banner.style.top = '0';
-            banner.style.left = '0';
-            banner.style.width = '100%';
-            banner.style.zIndex = '9999';
-            banner.style.color = '#fff';
-            banner.style.textAlign = 'center';
-            banner.style.padding = '0.75rem';
-            banner.style.fontSize = '0.75rem';
-            banner.style.fontFamily = '"Barlow", sans-serif';
-            banner.style.letterSpacing = '0.1em';
-            banner.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-            banner.style.transition = 'background-color 0.5s ease';
+            // Pure inline CSS, completely immune to Tailwind purges
+            banner.style.cssText = 'position:fixed; top:0; left:0; width:100%; z-index:99999; background:#00afb1; color:white; text-align:center; padding:10px; font-family:sans-serif; font-size:12px; letter-spacing:1px; box-shadow:0 2px 10px rgba(0,0,0,0.2); transition:background 0.3s;';
             document.body.appendChild(banner);
+            document.body.style.paddingTop = banner.offsetHeight + 'px';
         }
 
         if (status === 'progress') {
-            banner.style.backgroundColor = '#00afb1'; // Accent teal
+            banner.style.background = '#00afb1';
             banner.innerHTML = '&#8987; VER&Ouml;FFENTLICHUNG L&Auml;UFT ... GITHUB VERARBEITET DAS UPDATE';
         } else if (status === 'done') {
-            banner.style.backgroundColor = '#166534'; // Green success
-            banner.innerHTML = '&#9989; ONLINE! UPDATE ABGESCHLOSSEN. SEITE WIRD NEU GELADEN...';
+            banner.style.background = '#166534'; // Dark green
+            banner.innerHTML = '&#9989; ONLINE! SEITE WIRD NEU GELADEN...';
         }
-
-        // Push the layout down so nothing is hidden underneath
-        const bannerHeight = banner.offsetHeight + 'px';
-        if (nav) {
-            nav.style.transition = 'top 0.3s ease';
-            nav.style.top = bannerHeight;
-        }
-        document.body.style.transition = 'padding-top 0.3s ease';
-        document.body.style.paddingTop = bannerHeight;
     }
 
-    function startLiveDeploymentCheck() {
-        // Hardcoded key prevents crashes if the constants load late
-        const lastPublished = localStorage.getItem('dalab_last_published');
-        if (!lastPublished) return;
+    function checkDeployment() {
+        const last = localStorage.getItem('dalab_last_published');
+        if (!last) return;
 
-        updateDeployBanner('progress');
+        setDeployBanner('progress');
 
-        let attempts = 0;
-        const interval = setInterval(async () => {
-            attempts++;
-            if (attempts > 45) { // 15 minutes timeout
-                clearInterval(interval);
-                updateDeployBanner('hidden');
-                return;
-            }
-            try {
-                let basePath = window.location.href.split(/[?#]/)[0];
-                if (!basePath.endsWith('.html')) {
-                    basePath = basePath.replace(/\/$/, '') + '/index.html';
-                }
+        const interval = setInterval(() => {
+            // Random timestamp bypasses browser and CDN cache
+            const url = window.location.pathname + '?_bust=' + new Date().getTime();
+            fetch(url, { cache: 'no-store' })
+                .then(r => r.text())
+                .then(html => {
+                    // Regex extraction avoids unstable DOM Parsers on raw text
+                    const match = html.match(/<script[^>]*id="initial-data"[^>]*>([\s\S]*?)<\/script>/);
+                    if (match && match[1]) {
+                        const liveJson = JSON.stringify(JSON.parse(match[1]));
+                        if (liveJson === last) {
+                            clearInterval(interval);
+                            // Clean up
+                            ['dalab_standalone_data', 'dalab_edit_base', 'dalab_last_published'].forEach(k => localStorage.removeItem(k));
 
-                // Extremely aggressive cache busting targeting index.html directly
-                const url = basePath + '?_bust=' + new Date().getTime() + Math.random();
-                const res = await fetch(url, {
-                    cache: 'reload',
-                    headers: { 'Cache-Control': 'no-cache, no-store' }
-                });
-
-                if (!res.ok) return;
-                const html = await res.text();
-
-                const doc = new DOMParser().parseFromString(html, 'text/html');
-                const tag = doc.querySelector('#initial-data');
-
-                if (tag) {
-                    const liveJson = JSON.stringify(JSON.parse(tag.textContent));
-                    if (liveJson === lastPublished) {
-                        // Deployment detected!
-                        clearInterval(interval);
-                        ['dalab_standalone_data', 'dalab_edit_base', 'dalab_last_published'].forEach(k => localStorage.removeItem(k));
-
-                        updateDeployBanner('done');
-
-                        // Fulfills your original request: execute a hard reload automatically
-                        setTimeout(() => {
-                            window.location.reload(true);
-                        }, 2500);
+                            // Show success and trigger the requested hard reload!
+                            setDeployBanner('done');
+                            setTimeout(() => window.location.reload(true), 2000);
+                        }
                     }
-                }
-            } catch (err) {
-                // Silently continue polling on network errors
-            }
-        }, 20000); // Check every 20 seconds
+                })
+                .catch(() => { /* Keep polling on network errors */ });
+        }, 15000); // Check every 15 seconds
     }
 
     // ---------- Small UI helpers ----------
@@ -280,11 +233,6 @@
         if (!document.querySelector('.modal.active')) document.body.classList.remove('modal-open');
         if (lastFocused && lastFocused.isConnected) lastFocused.focus();
         lastFocused = null;
-
-        // Perform hard reload if the flag is set and the admin modal is no longer open
-        if (needsReloadAfterClose && !$('admin-modal').classList.contains('active')) {
-            window.location.reload(true);
-        }
     }
 
     // ---------- Overlay routing ----------
@@ -1279,7 +1227,6 @@
     }
 
     let publishing = false;
-    let needsReloadAfterClose = false;
 
     // ---------- Uploaded images -> files in the repo ----------
     // The CMS upload button embeds images as data URLs. Publishing turns each
@@ -1347,6 +1294,9 @@
         btn.disabled = true;
         btn.textContent = '⏳ VERÖFFENTLICHE …';
         const done = () => { publishing = false; btn.disabled = false; btn.textContent = '\u{1F680} VERÖFFENTLICHEN'; };
+
+        // Show the banner instantly
+        setDeployBanner('progress');
 
         try {
             const uploaded = await uploadEmbeddedImages(token, (i, n) => { btn.textContent = '⏳ BILD ' + i + '/' + n + ' …'; });
@@ -1421,7 +1371,7 @@
                 'bg-green-800');
 
             // Start monitoring GitHub Pages in the background
-            startLiveDeploymentCheck();
+            checkDeployment();
         } catch (err) {
             const s = err && err.status;
             if (s === 401) {
