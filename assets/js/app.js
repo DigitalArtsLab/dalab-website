@@ -83,10 +83,54 @@
         }
     }
 
+    // Controls a fixed banner at the top of the screen during deployment
+    function updateDeployBanner(status) {
+        let banner = document.getElementById('deploy-banner');
+        const nav = document.querySelector('nav');
+
+        if (status === 'hidden') {
+            if (banner) banner.remove();
+            if (nav) nav.style.top = '0';
+            return;
+        }
+
+        if (!banner) {
+            banner = document.createElement('div');
+            banner.id = 'deploy-banner';
+            banner.className = 'fixed top-0 left-0 w-full text-white text-center py-2 text-xs font-din tracking-widest z-[500] shadow-md transition-colors duration-500';
+            document.body.appendChild(banner);
+
+            // Push the navigation bar down so it doesn't get covered
+            if (nav) {
+                nav.style.transition = 'top 0.3s ease';
+                nav.style.top = '32px';
+            }
+        }
+
+        if (status === 'progress') {
+            banner.classList.remove('bg-green-600');
+            banner.classList.add('bg-accent');
+            banner.innerHTML = '&#8987; VER&Ouml;FFENTLICHUNG L&Auml;UFT ... GITHUB VERARBEITET DAS UPDATE';
+        } else if (status === 'done') {
+            banner.classList.remove('bg-accent');
+            banner.classList.add('bg-green-600');
+            banner.innerHTML = '&#9989; ONLINE! UPDATE ABGESCHLOSSEN.';
+
+            // Hide the banner and restore the nav after 6 seconds
+            setTimeout(() => {
+                if (banner) banner.remove();
+                if (nav) nav.style.top = '0';
+            }, 6000);
+        }
+    }
+
     // Automatically polls the live site to check if GitHub Pages has finished deploying.
     function startLiveDeploymentCheck() {
         const lastPublished = localStorage.getItem(LAST_PUBLISHED_KEY);
         if (!lastPublished) return;
+
+        // Show the progress banner immediately
+        updateDeployBanner('progress');
 
         let attempts = 0;
         // Check every 30 seconds
@@ -94,12 +138,20 @@
             attempts++;
             if (attempts > 30) { // Give up after 15 minutes
                 clearInterval(interval);
+                updateDeployBanner('hidden');
                 return;
             }
             try {
-                // Fetch the live site, appending a timestamp to bypass the browser cache
-                const url = window.location.href.split(/[?#]/)[0] + '?_t=' + Date.now();
-                const res = await fetch(url, { cache: 'no-store' });
+                // Aggressive cache-busting to bypass browser and CDN caches
+                const url = window.location.href.split(/[?#]/)[0] + '?_bust=' + Date.now() + Math.random();
+                const res = await fetch(url, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
                 if (!res.ok) return;
 
                 const html = await res.text();
@@ -115,7 +167,8 @@
                         usingStaleLocalCopy = false;
                         clearInterval(interval);
 
-                        toast('&#9989; ONLINE!', 'GitHub Pages hat das Update abgeschlossen. Die neueste Version ist jetzt offiziell live.', 'bg-green-800');
+                        // Change the banner to success and clean up
+                        updateDeployBanner('done');
                     }
                 }
             } catch (err) {
