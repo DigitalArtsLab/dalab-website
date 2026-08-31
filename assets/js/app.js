@@ -83,7 +83,7 @@
         }
     }
 
-// Controls a fixed banner at the top of the screen during deployment
+    // ---------- Deployment Polling & Banner ----------
     function updateDeployBanner(status) {
         let banner = document.getElementById('deploy-banner');
         const nav = document.querySelector('nav');
@@ -98,95 +98,94 @@
         if (!banner) {
             banner = document.createElement('div');
             banner.id = 'deploy-banner';
-            // Still fixed so it stays visible, but we push the page content below it
-            banner.className = 'fixed top-0 left-0 w-full text-white text-center py-2 text-xs font-din tracking-widest shadow-md transition-colors duration-500';
-            banner.style.zIndex = '500';
+            // Fully bypass Tailwind CSS compiler with pure inline styles
+            banner.style.position = 'fixed';
+            banner.style.top = '0';
+            banner.style.left = '0';
+            banner.style.width = '100%';
+            banner.style.zIndex = '9999';
+            banner.style.color = '#fff';
+            banner.style.textAlign = 'center';
+            banner.style.padding = '0.75rem';
+            banner.style.fontSize = '0.75rem';
+            banner.style.fontFamily = '"Barlow", sans-serif';
+            banner.style.letterSpacing = '0.1em';
+            banner.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+            banner.style.transition = 'background-color 0.5s ease';
             document.body.appendChild(banner);
-
-            // Dynamically measure the banner and push the nav and the whole page body down
-            const bannerHeight = banner.offsetHeight + 'px';
-            if (nav) {
-                nav.style.transition = 'top 0.3s ease';
-                nav.style.top = bannerHeight;
-            }
-            document.body.style.transition = 'padding-top 0.3s ease';
-            document.body.style.paddingTop = bannerHeight;
         }
 
         if (status === 'progress') {
-            banner.classList.remove('bg-green-800');
-            banner.classList.add('bg-accent');
+            banner.style.backgroundColor = '#00afb1'; // Accent teal
             banner.innerHTML = '&#8987; VER&Ouml;FFENTLICHUNG L&Auml;UFT ... GITHUB VERARBEITET DAS UPDATE';
         } else if (status === 'done') {
-            banner.classList.remove('bg-accent');
-            banner.classList.add('bg-green-800');
-            banner.innerHTML = '&#9989; ONLINE! UPDATE ABGESCHLOSSEN.';
-
-            // Hide the banner and restore the page layout after 6 seconds
-            setTimeout(() => {
-                if (banner) banner.remove();
-                if (nav) nav.style.top = '';
-                document.body.style.paddingTop = '';
-            }, 6000);
+            banner.style.backgroundColor = '#166534'; // Green success
+            banner.innerHTML = '&#9989; ONLINE! UPDATE ABGESCHLOSSEN. SEITE WIRD NEU GELADEN...';
         }
+
+        // Push the layout down so nothing is hidden underneath
+        const bannerHeight = banner.offsetHeight + 'px';
+        if (nav) {
+            nav.style.transition = 'top 0.3s ease';
+            nav.style.top = bannerHeight;
+        }
+        document.body.style.transition = 'padding-top 0.3s ease';
+        document.body.style.paddingTop = bannerHeight;
     }
 
-    // Automatically polls the live site to check if GitHub Pages has finished deploying.
     function startLiveDeploymentCheck() {
-        const lastPublished = localStorage.getItem(LAST_PUBLISHED_KEY);
+        // Hardcoded key prevents crashes if the constants load late
+        const lastPublished = localStorage.getItem('dalab_last_published');
         if (!lastPublished) return;
 
-        // Show the progress banner immediately
         updateDeployBanner('progress');
 
         let attempts = 0;
-        // Check every 15 seconds for a slightly faster response
         const interval = setInterval(async () => {
             attempts++;
-            if (attempts > 40) { // Give up after 10 minutes
+            if (attempts > 45) { // 15 minutes timeout
                 clearInterval(interval);
                 updateDeployBanner('hidden');
                 return;
             }
             try {
-                // Force the request to target the actual file, not the cached directory root
                 let basePath = window.location.href.split(/[?#]/)[0];
                 if (!basePath.endsWith('.html')) {
                     basePath = basePath.replace(/\/$/, '') + '/index.html';
                 }
 
-                // Extreme cache-busting
-                const url = basePath + '?_bust=' + Date.now();
+                // Extremely aggressive cache busting targeting index.html directly
+                const url = basePath + '?_bust=' + new Date().getTime() + Math.random();
                 const res = await fetch(url, {
-                    cache: 'reload', // Forces the browser to ignore its own cache completely
-                    headers: {
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
-                    }
+                    cache: 'reload',
+                    headers: { 'Cache-Control': 'no-cache, no-store' }
                 });
 
                 if (!res.ok) return;
-
                 const html = await res.text();
+
                 const doc = new DOMParser().parseFromString(html, 'text/html');
                 const tag = doc.querySelector('#initial-data');
 
                 if (tag) {
                     const liveJson = JSON.stringify(JSON.parse(tag.textContent));
                     if (liveJson === lastPublished) {
-                        // GitHub Pages is fully updated!
-                        [STORAGE_KEY, BASE_KEY, LAST_PUBLISHED_KEY].forEach(k => localStorage.removeItem(k));
-                        usingStaleLocalCopy = false;
+                        // Deployment detected!
                         clearInterval(interval);
+                        ['dalab_standalone_data', 'dalab_edit_base', 'dalab_last_published'].forEach(k => localStorage.removeItem(k));
 
                         updateDeployBanner('done');
+
+                        // Fulfills your original request: execute a hard reload automatically
+                        setTimeout(() => {
+                            window.location.reload(true);
+                        }, 2500);
                     }
                 }
             } catch (err) {
-                // Silently ignore network errors during background polling
+                // Silently continue polling on network errors
             }
-        }, 15000); // Reduced to 15 seconds so you aren't waiting unnecessarily
+        }, 20000); // Check every 20 seconds
     }
 
     // ---------- Small UI helpers ----------
