@@ -83,30 +83,34 @@
         }
     }
 
-    // Controls a fixed banner at the top of the screen during deployment
+// Controls a fixed banner at the top of the screen during deployment
     function updateDeployBanner(status) {
         let banner = document.getElementById('deploy-banner');
         const nav = document.querySelector('nav');
 
         if (status === 'hidden') {
             if (banner) banner.remove();
-            if (nav) nav.style.top = '0';
+            if (nav) nav.style.top = '';
+            document.body.style.paddingTop = '';
             return;
         }
 
         if (!banner) {
             banner = document.createElement('div');
             banner.id = 'deploy-banner';
-            // Removed uncompiled Tailwind classes and moved them to inline styles
+            // Still fixed so it stays visible, but we push the page content below it
             banner.className = 'fixed top-0 left-0 w-full text-white text-center py-2 text-xs font-din tracking-widest shadow-md transition-colors duration-500';
-            banner.style.zIndex = '500'; // Bypasses Tailwind to guarantee it sits on top
+            banner.style.zIndex = '500';
             document.body.appendChild(banner);
 
-            // Push the navigation bar down so it doesn't get covered
+            // Dynamically measure the banner and push the nav and the whole page body down
+            const bannerHeight = banner.offsetHeight + 'px';
             if (nav) {
                 nav.style.transition = 'top 0.3s ease';
-                nav.style.top = '32px';
+                nav.style.top = bannerHeight;
             }
+            document.body.style.transition = 'padding-top 0.3s ease';
+            document.body.style.paddingTop = bannerHeight;
         }
 
         if (status === 'progress') {
@@ -118,10 +122,11 @@
             banner.classList.add('bg-green-800');
             banner.innerHTML = '&#9989; ONLINE! UPDATE ABGESCHLOSSEN.';
 
-            // Hide the banner and restore the nav after 6 seconds
+            // Hide the banner and restore the page layout after 6 seconds
             setTimeout(() => {
                 if (banner) banner.remove();
-                if (nav) nav.style.top = '0';
+                if (nav) nav.style.top = '';
+                document.body.style.paddingTop = '';
             }, 6000);
         }
     }
@@ -135,25 +140,32 @@
         updateDeployBanner('progress');
 
         let attempts = 0;
-        // Check every 30 seconds
+        // Check every 15 seconds for a slightly faster response
         const interval = setInterval(async () => {
             attempts++;
-            if (attempts > 30) { // Give up after 15 minutes
+            if (attempts > 40) { // Give up after 10 minutes
                 clearInterval(interval);
                 updateDeployBanner('hidden');
                 return;
             }
             try {
-                // Aggressive cache-busting to bypass browser and CDN caches
-                const url = window.location.href.split(/[?#]/)[0] + '?_bust=' + Date.now() + Math.random();
+                // Force the request to target the actual file, not the cached directory root
+                let basePath = window.location.href.split(/[?#]/)[0];
+                if (!basePath.endsWith('.html')) {
+                    basePath = basePath.replace(/\/$/, '') + '/index.html';
+                }
+
+                // Extreme cache-busting
+                const url = basePath + '?_bust=' + Date.now();
                 const res = await fetch(url, {
-                    cache: 'no-store',
+                    cache: 'reload', // Forces the browser to ignore its own cache completely
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
                         'Expires': '0'
                     }
                 });
+
                 if (!res.ok) return;
 
                 const html = await res.text();
@@ -161,7 +173,6 @@
                 const tag = doc.querySelector('#initial-data');
 
                 if (tag) {
-                    // Normalize the live JSON exactly as we do on load
                     const liveJson = JSON.stringify(JSON.parse(tag.textContent));
                     if (liveJson === lastPublished) {
                         // GitHub Pages is fully updated!
@@ -169,14 +180,13 @@
                         usingStaleLocalCopy = false;
                         clearInterval(interval);
 
-                        // Change the banner to success and clean up
                         updateDeployBanner('done');
                     }
                 }
             } catch (err) {
                 // Silently ignore network errors during background polling
             }
-        }, 30000);
+        }, 15000); // Reduced to 15 seconds so you aren't waiting unnecessarily
     }
 
     // ---------- Small UI helpers ----------
