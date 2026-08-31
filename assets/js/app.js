@@ -57,6 +57,11 @@
             allData = JSON.parse(stored);
             const storedJson = JSON.stringify(allData);
             usingStaleLocalCopy = storedJson !== fileJson && storedJson !== lastPublished;
+
+            // Resume checking if we are waiting for a publish to go live
+            if (lastPublished) {
+                startLiveDeploymentCheck();
+            }
         } else {
             allData = JSON.parse(fileJson);
         }
@@ -76,6 +81,47 @@
                 'bg-red-800');
             return false;
         }
+    }
+
+    // Automatically polls the live site to check if GitHub Pages has finished deploying.
+    function startLiveDeploymentCheck() {
+        const lastPublished = localStorage.getItem(LAST_PUBLISHED_KEY);
+        if (!lastPublished) return;
+
+        let attempts = 0;
+        // Check every 30 seconds
+        const interval = setInterval(async () => {
+            attempts++;
+            if (attempts > 30) { // Give up after 15 minutes
+                clearInterval(interval);
+                return;
+            }
+            try {
+                // Fetch the live site, appending a timestamp to bypass the browser cache
+                const url = window.location.href.split(/[?#]/)[0] + '?_t=' + Date.now();
+                const res = await fetch(url, { cache: 'no-store' });
+                if (!res.ok) return;
+
+                const html = await res.text();
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const tag = doc.querySelector('#initial-data');
+
+                if (tag) {
+                    // Normalize the live JSON exactly as we do on load
+                    const liveJson = JSON.stringify(JSON.parse(tag.textContent));
+                    if (liveJson === lastPublished) {
+                        // GitHub Pages is fully updated!
+                        [STORAGE_KEY, BASE_KEY, LAST_PUBLISHED_KEY].forEach(k => localStorage.removeItem(k));
+                        usingStaleLocalCopy = false;
+                        clearInterval(interval);
+
+                        toast('&#9989; ONLINE!', 'GitHub Pages hat das Update abgeschlossen. Die neueste Version ist jetzt offiziell live.', 'bg-green-800');
+                    }
+                }
+            } catch (err) {
+                // Silently ignore network errors during background polling
+            }
+        }, 30000);
     }
 
     // ---------- Small UI helpers ----------
@@ -1310,8 +1356,8 @@
                 (commitUrl ? '<br><br><a href="' + esc(commitUrl) + '" target="_blank" rel="noopener" class="hover:underline font-bold">Commit auf GitHub ansehen &#8599;</a>' : ''),
                 'bg-green-800');
 
-            // Set the flag to trigger a reload when the modal closes
-            needsReloadAfterClose = true;
+            // Start monitoring GitHub Pages in the background
+            startLiveDeploymentCheck();
         } catch (err) {
             const s = err && err.status;
             if (s === 401) {
