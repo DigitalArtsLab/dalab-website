@@ -97,7 +97,9 @@
         if (!banner) {
             banner = document.createElement('div');
             banner.id = 'deploy-banner';
-            banner.className = 'fixed top-0 left-0 w-full text-white text-center py-2 text-xs font-din tracking-widest z-[500] shadow-md transition-colors duration-500';
+            // Removed uncompiled Tailwind classes and moved them to inline styles
+            banner.className = 'fixed top-0 left-0 w-full text-white text-center py-2 text-xs font-din tracking-widest shadow-md transition-colors duration-500';
+            banner.style.zIndex = '500'; // Bypasses Tailwind to guarantee it sits on top
             document.body.appendChild(banner);
 
             // Push the navigation bar down so it doesn't get covered
@@ -108,12 +110,12 @@
         }
 
         if (status === 'progress') {
-            banner.classList.remove('bg-green-600');
+            banner.classList.remove('bg-green-800');
             banner.classList.add('bg-accent');
             banner.innerHTML = '&#8987; VER&Ouml;FFENTLICHUNG L&Auml;UFT ... GITHUB VERARBEITET DAS UPDATE';
         } else if (status === 'done') {
             banner.classList.remove('bg-accent');
-            banner.classList.add('bg-green-600');
+            banner.classList.add('bg-green-800');
             banner.innerHTML = '&#9989; ONLINE! UPDATE ABGESCHLOSSEN.';
 
             // Hide the banner and restore the nav after 6 seconds
