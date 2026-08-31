@@ -83,11 +83,15 @@
         }
     }
 
-    // ---------- Deployment Polling & Banner ----------
+// ---------- Deployment Polling & Banner ----------
     function setDeployBanner(status) {
         let banner = document.getElementById('deploy-banner');
+        const nav = document.querySelector('nav');
+        const bannerHeight = '36px'; // Fixed height so we can precisely move the nav
+
         if (status === 'hidden') {
             if (banner) banner.remove();
+            if (nav) nav.style.top = '';
             document.body.style.paddingTop = '';
             return;
         }
@@ -95,17 +99,25 @@
         if (!banner) {
             banner = document.createElement('div');
             banner.id = 'deploy-banner';
-            // Pure inline CSS, completely immune to Tailwind purges
-            banner.style.cssText = 'position:fixed; top:0; left:0; width:100%; z-index:99999; background:#00afb1; color:white; text-align:center; padding:10px; font-family:sans-serif; font-size:12px; letter-spacing:1px; box-shadow:0 2px 10px rgba(0,0,0,0.2); transition:background 0.3s;';
+            // Pure inline CSS with a fixed height to avoid overlap
+            banner.style.cssText = `position:fixed; top:0; left:0; width:100%; height:${bannerHeight}; line-height:${bannerHeight}; z-index:99999; background:#00afb1; color:white; text-align:center; padding:0 10px; font-family:sans-serif; font-size:12px; letter-spacing:1px; box-shadow:0 2px 10px rgba(0,0,0,0.2); transition:background 0.3s;`;
             document.body.appendChild(banner);
-            document.body.style.paddingTop = banner.offsetHeight + 'px';
         }
+
+        // Explicitly push the fixed navigation bar down so they don't overlap
+        if (nav) {
+            nav.style.transition = 'top 0.3s ease';
+            nav.style.top = bannerHeight;
+        }
+        // Also push the body down for the rest of the content
+        document.body.style.transition = 'padding-top 0.3s ease';
+        document.body.style.paddingTop = bannerHeight;
 
         if (status === 'progress') {
             banner.style.background = '#00afb1';
             banner.innerHTML = '&#8987; VER&Ouml;FFENTLICHUNG L&Auml;UFT ... GITHUB VERARBEITET DAS UPDATE';
         } else if (status === 'done') {
-            banner.style.background = '#166534'; // Dark green
+            banner.style.background = '#166534';
             banner.innerHTML = '&#9989; ONLINE! SEITE WIRD NEU GELADEN...';
         }
     }
@@ -117,28 +129,38 @@
         setDeployBanner('progress');
 
         const interval = setInterval(() => {
-            // Random timestamp bypasses browser and CDN cache
-            const url = window.location.pathname + '?_bust=' + new Date().getTime();
-            fetch(url, { cache: 'no-store' })
+            // Force the URL to explicitly target index.html to bypass root directory caches
+            let path = window.location.pathname;
+            if (!path.endsWith('.html')) {
+                path = path.replace(/\/$/, '') + '/index.html';
+            }
+
+            // Appending Date.now() ensures every single request is unique
+            const url = window.location.origin + path + '?_bust=' + Date.now();
+
+            fetch(url, { cache: 'no-store', headers: { 'Cache-Control': 'no-store' } })
                 .then(r => r.text())
                 .then(html => {
-                    // Regex extraction avoids unstable DOM Parsers on raw text
-                    const match = html.match(/<script[^>]*id="initial-data"[^>]*>([\s\S]*?)<\/script>/);
-                    if (match && match[1]) {
-                        const liveJson = JSON.stringify(JSON.parse(match[1]));
+                    // Use DOMParser as it is the most reliable way to read HTML entities
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const tag = doc.querySelector('#initial-data');
+
+                    if (tag) {
+                        const liveJson = JSON.stringify(JSON.parse(tag.textContent));
                         if (liveJson === last) {
                             clearInterval(interval);
-                            // Clean up
+
+                            // Clean up localStorage to exit the "stale" state
                             ['dalab_standalone_data', 'dalab_edit_base', 'dalab_last_published'].forEach(k => localStorage.removeItem(k));
 
-                            // Show success and trigger the requested hard reload!
+                            // Update banner and execute a hard reload 2 seconds later
                             setDeployBanner('done');
                             setTimeout(() => window.location.reload(true), 2000);
                         }
                     }
                 })
-                .catch(() => { /* Keep polling on network errors */ });
-        }, 15000); // Check every 15 seconds
+                .catch(() => { /* Silently ignore network errors and keep polling */ });
+        }, 10000); // Check every 10 seconds
     }
 
     // ---------- Small UI helpers ----------
