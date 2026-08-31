@@ -170,6 +170,11 @@
         if (!document.querySelector('.modal.active')) document.body.classList.remove('modal-open');
         if (lastFocused && lastFocused.isConnected) lastFocused.focus();
         lastFocused = null;
+
+        // Perform hard reload if the flag is set and the admin modal is no longer open
+        if (needsReloadAfterClose && !$('admin-modal').classList.contains('active')) {
+            window.location.reload(true);
+        }
     }
 
     // ---------- Overlay routing ----------
@@ -474,21 +479,28 @@
         let meta = esc(p.authors) + ' &ndash; ' + esc(p.journal);
         if (p.details && p.details.trim()) meta += ', ' + esc(p.details.trim());
         const doi = doiUrl(p.doi);
+
+        // Dynamically choose between an anchor tag or div, adding the 'block' class
+        const tag = doi ? 'a' : 'div';
+        const hrefAttr = doi ? `href="${esc(doi)}" target="_blank" rel="noopener"` : '';
+
+        // Display the DOI text without nested anchor tags to keep HTML valid
         const doiHtml = doi
-            ? `<a href="${esc(doi)}" target="_blank" rel="noopener" class="text-accent hover:text-main transition-colors interactive font-medium break-all">${esc(doi)}</a>`
+            ? `<p class="text-sm font-light mt-1 text-accent font-medium break-all">${esc(doi)}</p>`
             : '';
+
         return `
-            <div class="group interactive relative ${extraClass}">
-                <div class="absolute left-0 top-0 h-full w-1 bg-accent scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300"></div>
-                <div class="pl-4">
-                    <div class="flex flex-col md:flex-row md:items-baseline justify-between">
-                        <h4 class="font-bold text-xl mb-1 text-main normal-case group-hover:text-accent transition-colors">${esc(p.title)}</h4>
-                        ${showYear ? '<span class="text-sm font-din tracking-widest opacity-60">' + esc(p.year) + '</span>' : ''}
-                    </div>
-                    <p class="text-base text-main/70 font-light">${meta}</p>
-                    ${doiHtml ? '<p class="text-sm font-light mt-1">' + doiHtml + '</p>' : ''}
+        <${tag} ${hrefAttr} class="group interactive relative block ${extraClass}">
+            <div class="absolute left-0 top-0 h-full w-1 bg-accent scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300"></div>
+            <div class="pl-4">
+                <div class="flex flex-col md:flex-row md:items-baseline justify-between">
+                    <h4 class="font-bold text-xl mb-1 text-main normal-case group-hover:text-accent transition-colors">${esc(p.title)}</h4>
+                    ${showYear ? '<span class="text-sm font-din tracking-widest opacity-60">' + esc(p.year) + '</span>' : ''}
                 </div>
-            </div>`;
+                <p class="text-base text-main/70 font-light">${meta}</p>
+                ${doiHtml}
+            </div>
+        </${tag}>`;
     }
 
     function renderPubs() {
@@ -1157,6 +1169,7 @@
     }
 
     let publishing = false;
+    let needsReloadAfterClose = false;
 
     // ---------- Uploaded images -> files in the repo ----------
     // The CMS upload button embeds images as data URLs. Publishing turns each
@@ -1296,6 +1309,9 @@
                 (notes.length ? '<br><br>' + notes.map(esc).join('<br>') : '') +
                 (commitUrl ? '<br><br><a href="' + esc(commitUrl) + '" target="_blank" rel="noopener" class="hover:underline font-bold">Commit auf GitHub ansehen &#8599;</a>' : ''),
                 'bg-green-800');
+
+            // Set the flag to trigger a reload when the modal closes
+            needsReloadAfterClose = true;
         } catch (err) {
             const s = err && err.status;
             if (s === 401) {
