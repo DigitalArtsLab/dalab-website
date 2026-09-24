@@ -240,7 +240,7 @@ erfordert Code:
 
 | Bereich | Was noch fehlt |
 | --- | --- |
-| Rechtstexte | Lab-Mailadresse, Datenschutzbeauftragte:r, Datum der Datenschutzerklärung – 11 Stellen, siehe [unten](#impressum-datenschutz-kontakt) |
+| Rechtstexte | Datenschutzbeauftragte:r und Datum der Datenschutzerklärung, siehe [unten](#impressum-datenschutz-kontakt) |
 | Projekte | „Thermal VR“ hat noch kein Bild |
 | Projekte | „Theaterautomat“ hat noch keinen Link (Video oder Projektseite nachtragen, sobald es eine Adresse gibt) |
 | Bilder | Zu klein, bitte in größer neu hochladen: LudaViz-Projektbild (800px, altes Upload-Limit), Team-Porträts von Luca (160px), Florian (200px), Lisa (200px), Lukas (388px); grenzwertig: Theaterautomat (1200px) |
@@ -274,11 +274,12 @@ Englisch.
   geprüft), mit der GmbH als Verantwortlicher. Vor dem Live-Gang von der
   FH freigeben lassen.
 - **Kontakt:** Campus-Adresse Softwarepark 13, 4232 Hagenberg im Mühlkreis.
+- **Lab-Mailadresse:** `contact-digitalarts-lab@uap.at` – steht an vier
+  Stellen (Kontakt, Impressum 2×, Datenschutz). Bei einer Änderung am
+  schnellsten per Suchen & Ersetzen.
 
 **Noch offen** – alle Stellen sind mit `[ZU ERGÄNZEN]` markiert:
 
-- die **Lab-Mailadresse** – steht an vier Stellen (Impressum 2×,
-  Datenschutz, Kontakt); am schnellsten per Suchen & Ersetzen,
 - Kontakt des/der **Datenschutzbeauftragten** der FH OÖ,
 - das **Datum** der Datenschutzerklärung.
 
