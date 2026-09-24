@@ -9,8 +9,9 @@ aus diesem Repo (`DigitalArtsLab/dalab-website`). Es gibt keinen Server und
 keinen Build-Schritt. Inhalte werden direkt im Browser gepflegt – über ein
 verstecktes CMS auf der Seite selbst – und mit einem Klick veröffentlicht.
 
-> **Offen vor dem Live-Gang:** die Rechtstexte und ein Teil der Inhalte sind
-> noch Platzhalter. Siehe [Vor dem Live-Gang](#vor-dem-live-gang).
+> **Offen vor dem Live-Gang:** ein Teil der Inhalte ist noch Platzhalter,
+> die Rechtstexte brauchen noch die Freigabe der FH. Siehe
+> [Vor dem Live-Gang](#vor-dem-live-gang).
 
 ---
 
@@ -240,7 +241,6 @@ erfordert Code:
 
 | Bereich | Was noch fehlt |
 | --- | --- |
-| Rechtstexte | Datenschutzbeauftragte:r und Datum der Datenschutzerklärung, siehe [unten](#impressum-datenschutz-kontakt) |
 | Projekte | „Thermal VR“ hat noch kein Bild |
 | Projekte | „Theaterautomat“ hat noch keinen Link (Video oder Projektseite nachtragen, sobald es eine Adresse gibt) |
 | Bilder | Zu klein, bitte in größer neu hochladen: LudaViz-Projektbild (800px, altes Upload-Limit), Team-Porträts von Luca (160px), Florian (200px), Lisa (200px), Lukas (388px); grenzwertig: Theaterautomat (1200px) |
@@ -277,15 +277,6 @@ Englisch.
 - **Lab-Mailadresse:** `contact-digitalarts-lab@uap.at` – steht an vier
   Stellen (Kontakt, Impressum 2×, Datenschutz). Bei einer Änderung am
   schnellsten per Suchen & Ersetzen.
-
-**Noch offen** – alle Stellen sind mit `[ZU ERGÄNZEN]` markiert:
-
-- Kontakt des/der **Datenschutzbeauftragten** der FH OÖ,
-- das **Datum** der Datenschutzerklärung.
-
-```bash
-grep -n "ZU ERGÄNZEN" index.html
-```
 
 ---
 
