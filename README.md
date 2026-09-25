@@ -2,7 +2,7 @@
 
 Die Website des **Digital Arts Lab** (FH Oberösterreich, Campus Hagenberg):
 
-**https://digitalartslab.github.io/dalab-website/**
+**https://digitalarts-lab.at/**
 
 Die Seite ist eine einzige statische HTML-Datei, gehostet über GitHub Pages
 aus diesem Repo (`DigitalArtsLab/dalab-website`). Es gibt keinen Server und
@@ -251,11 +251,9 @@ Bereits erledigt und geprüft: alle 5 Projekte und 39 Publikationen
 2021–2026 sind eingepflegt (DOIs gegen Crossref verifiziert), News und Team
 sind aktuell.
 
-**Eigene Domain** (falls gewünscht, z.B. `dalab.at`): Datei `CNAME` mit der
-Domain als Inhalt ins Repo legen und die Domain per DNS auf GitHub Pages
-zeigen (Repo → Settings → Pages zeigt die nötigen Einträge; GitHub-Doku:
-„Managing a custom domain for your GitHub Pages site“). Danach die drei
-Adressen im `<head>` umstellen, siehe
+**Eigene Domain:** `digitalarts-lab.at` ist eingerichtet (Datei `CNAME` im
+Repo, DNS zeigt auf GitHub Pages; die alte github.io-Adresse leitet dorthin
+weiter). Die drei Adressen im `<head>` zeigen bereits darauf, siehe
 [Link-Vorschau und Favicon](#link-vorschau-und-favicon).
 
 ## Impressum, Datenschutz, Kontakt

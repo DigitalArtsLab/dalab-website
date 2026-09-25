@@ -253,8 +253,11 @@
         if (!open.length) return;
         open.forEach(m => m.classList.remove('active'));
         if (!document.querySelector('.modal.active')) document.body.classList.remove('modal-open');
-        if (lastFocused && lastFocused.isConnected) lastFocused.focus();
+        // No scrolling: the page should stay where it was (or go where a
+        // section link sends it), not jump to the footer link that opened the overlay.
+        if (lastFocused && lastFocused.isConnected) lastFocused.focus({ preventScroll: true });
         lastFocused = null;
+        return true;
     }
 
     // ---------- Overlay routing ----------
@@ -315,11 +318,23 @@
         }
 
         // A detail view can sit on top of an open archive - leave that one up.
-        hideModals(item ? ['archive-modal'] : []);
+        const closed = hideModals(item ? ['archive-modal'] : []);
 
         if (item) detailOpeners[listName](item);
         else if (PLAIN_ROUTES[route]) PLAIN_ROUTES[route]();
+        else if (closed && route) {
+            // A section link inside an overlay (Contact -> team section): the
+            // browser tried to jump while the page was locked, so do it now.
+            const target = document.getElementById(route);
+            if (target) requestAnimationFrame(() => target.scrollIntoView());
+        }
     }
+
+    // Marks history entries pushed by this very page load. After the tab was
+    // reloaded - iOS Safari does that silently to background tabs, e.g. while
+    // a profile link is open in another tab - the older entries belong to a
+    // page that is gone, and Safari may ignore history.back() onto them.
+    const PAGE_LOAD = Date.now() + '-' + Math.random().toString(36).slice(2);
 
     // Opens an overlay by pushing its address; applyRoute does the rest.
     // The state flag marks entries we created ourselves, so closing knows
@@ -327,7 +342,7 @@
     function openRoute(route) {
         if (currentRoute() === route) { appliedRoute = null; applyRoute(); return; }
         try {
-            history.pushState({ dalabOverlay: true }, '', '#' + route);
+            history.pushState({ dalabOverlay: PAGE_LOAD }, '', '#' + route);
             applyRoute();
         } catch (err) {
             // Opened straight from the file system: file:// forbids pushState.
@@ -356,11 +371,21 @@
             }
             return;
         }
-        if (history.state && history.state.dalabOverlay) { history.back(); return; }
+        if (history.state && history.state.dalabOverlay === PAGE_LOAD) {
+            const route = currentRoute();
+            history.back();
+            // Safety net: if Back did nothing, the overlay would stay stuck.
+            setTimeout(() => { if (currentRoute() === route) dropRoute(); }, 400);
+            return;
+        }
+        dropRoute();
+    }
+
+    // Closes without going back - for pages opened straight from a shared
+    // link (going back would leave the site) or restored by the browser.
+    function dropRoute() {
         if (location.hash) {
             try {
-                // Opened straight from a shared link: drop the hash instead of
-                // going back, which would leave the site.
                 history.replaceState(null, '', location.pathname + location.search);
                 appliedRoute = '';
             } catch (err) {
@@ -374,6 +399,8 @@
 
     window.addEventListener('popstate', applyRoute);
     window.addEventListener('hashchange', applyRoute);
+    // Page restored from the back/forward cache: re-sync with the address.
+    window.addEventListener('pageshow', e => { if (e.persisted) { appliedRoute = null; applyRoute(); } });
 
     // Keep Tab inside the topmost open modal.
     document.addEventListener('keydown', e => {
